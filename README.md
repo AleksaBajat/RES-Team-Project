@@ -1,2 +1,2 @@
-# BestRESProject
+# RES-Team-Project
 Bez kompromisa.
