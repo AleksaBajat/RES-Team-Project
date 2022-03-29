@@ -1,2 +1,2 @@
 # RES-Team-Project
-Bez kompromisa.
+Dva kompromisa.
