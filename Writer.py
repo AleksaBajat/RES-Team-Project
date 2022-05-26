@@ -1,5 +1,7 @@
 import socket
 from _thread import *
+import json
+import tempSample as ts
 
 HOST = "127.0.0.1" 
 PORT = 10101
@@ -7,10 +9,12 @@ PORT = 10101
 def multi_threaded_connection(connection):  
     with connection:
         while True:
-            data = conn.recv(1024)          #Trenutno prima samo stringove, tj bytes.
+            data = conn.recv(1024)         
             if not data:
                 break
-            print(data)   
+            data = json.loads(data)
+            sample = ts.TempSample(**data)
+            print(sample.printSample())
             
 
 
