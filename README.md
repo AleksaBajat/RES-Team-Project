@@ -1,2 +1,5 @@
 # RES-Team-Project
-Dva kompromisa.
+
+Writer:
+    - Za svaku poruku koju klijent posalje se pravi novi socket.
+    - Podrzava vise klijenata u isto vreme.
