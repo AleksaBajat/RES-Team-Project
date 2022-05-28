@@ -1,5 +1,5 @@
-class DataSimple:
-    def __init__(id, potrosnja, korisnik, adresa):
+class DataSample:
+    def _init_(self, id, potrosnja, korisnik, adresa):
         self.id = id
         self.potrosnja = potrosnja
         self.korisnik = korisnik
