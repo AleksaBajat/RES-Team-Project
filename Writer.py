@@ -12,24 +12,27 @@ SendHost = "127.0.0.1"
 SendPort = 20202
 
 
-def multi_threaded_connection(connection):  
+def multi_threaded_connection(connection): 
+    receiveData = [] 
     with connection:
         while True:
-            data = conn.recv(1024) 
+            data = conn.recv(100)
             if not data:
                 break
-            data = json.loads(data)
-            sample = DataSample(**data)
-            print("{} {} {} {}".format(sample.id, sample.potrosnja, sample.adresa, sample.korisnik))        # radi provere
+            receiveData.append(data)                                                      # ako ima vise od 1024 bajta, spaja ih u jedan niz
 
-            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:                            # slanje ka Dump buffer-u
-                try:
-                    s.connect((SendHost, SendPort))
-                    s.send(json.dumps(sample.__dict__).encode('utf-8'))
-                except Exception as e:
-                    print(e)
-                finally:
-                    s.close()
+        data = json.loads(b''.join(receiveData))                                                        # spaja niz bajtova u byte list
+        sample = DataSample(**data)
+        print("{} {} {} {}".format(sample.id, sample.potrosnja, sample.adresa, sample.korisnik))        # radi provere
+
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:                            # slanje ka Dump buffer-u
+            try:
+                s.connect((SendHost, SendPort))
+                s.send(json.dumps(sample.__dict__).encode('utf-8'))
+            except Exception as e:
+                print(e)
+            finally:
+                s.close()
                 
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
