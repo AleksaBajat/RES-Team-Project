@@ -1,5 +1,6 @@
 import json
 import socket
+import DataSample
 
 def getMessage():
     print("Uneti ID brojila")
@@ -20,7 +21,9 @@ def getMessage():
         }
     }
 
-    return json.dumps(message)
+    message = DataSample(ID, potrosnja, korisnik, adresa)
+
+    return json.dumps(message.dict).encode("utf-8")
 
 def connectToWriter():
     # Create a TCP/IP socket
