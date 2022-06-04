@@ -4,8 +4,9 @@ from logging import exception
 def getReply(option,parameter):
     return
 
-def getByMonth(month):
-    return
+def getByMonth(month, conn):
+    sqlSelect = "Select * from Data where month = " + month
+    return sqlSelect
 
 def getByAddress(address):
     return
