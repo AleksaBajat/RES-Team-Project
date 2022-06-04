@@ -1,4 +1,5 @@
-from Communication import *
+from readerConnection import *
+from wirterConnection import *
 
 def menu():
     while True:
