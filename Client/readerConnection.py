@@ -1,6 +1,6 @@
 import json
 import socket
-import DataSample
+from Model.DataSample import *
 
 
 def connectToReader(y,z):
