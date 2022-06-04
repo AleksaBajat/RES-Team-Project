@@ -13,16 +13,16 @@ def create_connection(db_file):
     return conn
 
 def select_by_string(conn, string):
-
     cur = conn.cursor()
-    cur.execute(str)
+    print("string za selekciju "+string)
+    cur.execute(string)
 
     rows = cur.fetchall()
-
     return rows
 
 
 def open_connection_and_reply(string): 
+    
     conn = create_connection(database)
     with conn:
         rows = select_by_string(conn, string)
