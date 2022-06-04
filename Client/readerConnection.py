@@ -1,3 +1,8 @@
+import json
+import socket
+import DataSample
+
+
 def connectToReader(y,z):
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 

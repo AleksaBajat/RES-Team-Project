@@ -30,7 +30,7 @@ def connectToWriter():
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
     # Connect the socket to the port where the server is listening
-    server_address = ('localhost', 10000)
+    server_address = ("127.0.0.1", 10101)
     print("connecting to " + str(server_address))
     sock.connect(server_address)
 
