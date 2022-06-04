@@ -1,8 +1,15 @@
 from logging import exception
-
+from ConnectToDatabase import *
 
 def getReply(option,parameter):
-    return
+    if(option==1):
+        string= getAll()
+    
+    reply = open_connection_and_reply(string)
+    return "aaa"
+
+def getAll():
+    return "Select * from Data"
 
 def getByMonth(month):
     return
