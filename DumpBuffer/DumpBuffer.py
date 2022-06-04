@@ -3,7 +3,7 @@ import socket
 import time
 from _thread import *
 
-from DataSample import *
+from Model.DataSample import *
 from queue import Queue
 import pickle
 

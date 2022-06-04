@@ -1,6 +1,6 @@
 import json
 import socket
-import DataSample
+from Model.DataSample import *
 
 def getMessage():
     print("Uneti ID brojila")
@@ -30,7 +30,7 @@ def connectToWriter():
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
     # Connect the socket to the port where the server is listening
-    server_address = ('localhost', 10000)
+    server_address = ("127.0.0.1", 10101)
     print("connecting to " + str(server_address))
     sock.connect(server_address)
 
@@ -38,26 +38,6 @@ def connectToWriter():
         message = getMessage()
         print("sending " + str(message))
         sock.send(message.encode("utf-8"))
-           
-    except Exception as e:
-        print(e)
-    finally:
-        print('closing socket')
-        sock.close()
-
-def connectToReader(y,z):
-    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-    # Connect the socket to the port where the server is listening
-    server_address = ('localhost', 10000)
-    print("connecting to " + str(server_address))
-    sock.connect(server_address)
-
-    try:   
-        message=y+","+z
-        sock.send(message.encode("utf-8"))
-        reply=sock.recv(1024)
-        print(reply)
            
     except Exception as e:
         print(e)
