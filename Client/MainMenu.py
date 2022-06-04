@@ -1,5 +1,5 @@
-from readerConnection import *
-from wirterConnection import *
+from ReaderConnection import *
+from WriterConnection import *
 
 
 def menu():
@@ -12,7 +12,7 @@ def menu():
             print(
                 "Odaberite opciju citanja\n1 - Procitaj sve\n2 - Procitaj po odredjenom mesecu\n3 - Procitaj po korisniku\n4 - Procitaj po gradu")
             y = input()
-            z = 0
+            z = '0'
             if y == "2":
                 print("Unesite redni broj meseca u godini")
                 z = input()
