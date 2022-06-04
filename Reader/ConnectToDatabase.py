@@ -13,12 +13,11 @@ def create_connection(db_file):
     return conn
 
 def select_by_string(conn, string):
-
     cur = conn.cursor()
-    cur.execute(str)
+    print("string za selekciju "+string)
+    cur.execute(string)
 
     rows = cur.fetchall()
-
     return rows
 
 
