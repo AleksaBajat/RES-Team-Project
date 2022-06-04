@@ -10,10 +10,10 @@ def getByMonth(month):
 def getByAddress(address):
     return
 
-def getByPowerConsumptionAbove(userId, value):
+def getByPowerConsumptionAbove(value):
     return
 
-def getByPowerConsumptionBelow(userId, value):
+def getByPowerConsumptionBelow(value):
     return
 
 def getByCity(city):
