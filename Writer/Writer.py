@@ -1,15 +1,17 @@
-from shutil import ExecError
+import sys
+sys.path.append('../')
+
+import json
 import socket
 from _thread import *
-import json
-from typing import final
+
 from Model.DataSample import *
 
 ReceiveHost = "127.0.0.1" 
-ReceivePort = 10101
+ReceivePort = 10000
 
 SendHost = "127.0.0.1"
-SendPort = 20202
+SendPort = 20000
 
 
 def multi_threaded_connection(connection): 
@@ -23,7 +25,7 @@ def multi_threaded_connection(connection):
 
         data = json.loads(b''.join(receiveData))                                                        # spaja niz bajtova u byte list
         sample = DataSample(**data)
-        print("{} {} {} {}".format(sample.id, sample.potrosnja, sample.adresa, sample.korisnik))        # radi provere
+        print("{} {} {} {}".format(sample.unitId, sample.consumption, sample.address, sample.userId))        # radi provere
 
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:                            # slanje ka Dump buffer-u
             try:

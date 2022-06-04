@@ -1,13 +1,14 @@
 from readerConnection import *
 from wirterConnection import *
 
+
 def menu():
     while True:
         print("Da li zelite da pisete ili da citate? Unesite slovo w za pisanje ili slovo r za citanje")
-        x= input()
-        if x=="w":
+        x = input()
+        if x == "w":
             connectToWriter()
-        elif x=="r":
+        elif x == "r":
             print(
                 "Odaberite opciju citanja\n1 - Procitaj sve\n2 - Procitaj po odredjenom mesecu\n3 - Procitaj po korisniku\n4 - Procitaj po gradu")
             y = input()
@@ -22,7 +23,5 @@ def menu():
                 print("Unesite grad")
                 z = input()
             connectToReader(y, z)
-        elif x=="x":
+        elif x == "x":
             break
-
-
