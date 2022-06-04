@@ -1,6 +1,6 @@
 import json
 import socket
-import DataSample
+from Model.DataSample import *
 
 def getMessage():
     print("Uneti ID brojila")
