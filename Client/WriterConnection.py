@@ -25,7 +25,7 @@ def getMessage():
 
     message = DataSample(ID, potrosnja, korisnik, adresa)
     
-    return json.dumps(message.dict).encode("utf-8")
+    return json.dumps(message.__dict__).encode("utf-8")
 
 def connectToWriter():
     # Create a TCP/IP socket
@@ -39,7 +39,7 @@ def connectToWriter():
     try:   
         message = getMessage()
         print("sending " + str(message))
-        sock.send(message.encode("utf-8"))
+        sock.send(message)
            
     except Exception as e:
         print(e)

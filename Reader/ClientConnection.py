@@ -1,7 +1,10 @@
 from optparse import Option
 from sqlite3 import paramstyle
+import string
 from CreateReply import *
 import sys
+import codecs
+import string
 sys.path.append('../')
 
 import json
@@ -13,24 +16,20 @@ from Model.DataSample import *
 ReceiveHost = "127.0.0.1" 
 ReceivePort = 40000
 
-SendHost = "127.0.0.1"
-SendPort = 20000
-
-
 def multi_threaded_connection(connection): 
-    receiveData = [] 
     with connection:
         while True:
-            data = conn.recv(100)
+            data = conn.recv(1024)
             if not data:
                 break
-            receiveData.append(data)                                                          
-            receiveData=str(receiveData)
-            option=receiveData.split(',')[0]
-            parameter=receiveData.split(',')[1]
-            print(option+"  "+parameter)
+            data=(data.decode("utf-8"))                                                          
+            option=data.split(',')[0]
+            parameter=data.split(',')[1]
+            parameter=parameter[1:]
             reply=getReply(option,parameter)
-            #conn.sendall(reply)
+            
+
+            conn.sendall(str(reply).encode("utf-8"))
         
       
 
