@@ -1,16 +1,12 @@
-from shutil import ExecError
+import sys
+sys.path.append('../')
+
+import pickle
 import socket
 from _thread import *
-import json
-from typing import final
-from Model.DataSample import *
-import pickle
 
 ReceiveHost = "127.0.0.1"
 ReceivePort = 30000
-
-
-
 
 def multi_threaded_connection(connection):
     with connection:
@@ -20,7 +16,7 @@ def multi_threaded_connection(connection):
                 break
             data = pickle.loads(data)
             for sample in data:
-                print("Received: {} {} {} {}".format(sample.id, sample.potrosnja, sample.adresa, sample.korisnik))
+                print("Received: {} {} {} {}".format(sample.unitId, sample.consumption, sample.address, sample.userId))
 
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:

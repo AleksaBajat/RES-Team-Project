@@ -1,3 +1,6 @@
+import sys
+sys.path.append('../')
+
 import json
 import socket
 import time
@@ -6,6 +9,8 @@ from _thread import *
 from Model.DataSample import *
 from queue import Queue
 import pickle
+
+
 
 ReceiveHost = "127.0.0.1"
 ReceivePort = 20000
@@ -23,7 +28,7 @@ def multi_threaded_connection(connection):
             data = json.loads(data)
             sample = DataSample(**data)
             queue.put(sample)
-            print("Received: {} {} {} {}".format(sample.id, sample.potrosnja, sample.adresa, sample.korisnik))
+            print("Received: {} {} {} {}".format(sample.unitId, sample.consumption, sample.address, sample.userId))
 
 
 def batch_sender(queue):
