@@ -26,14 +26,13 @@ def getByMonth(month, conn):
     sqlSelect = "Select * from meterReadings where month = " + month
     return sqlSelect
 
-def getByAddress(address):
-    return
-
 def getByPowerConsumptionAbove(value):
-    return
+    sqlSelect = "Select * from meterReadings where consumption >= " + str(value)
+    return sqlSelect
 
 def getByPowerConsumptionBelow(value):
-    return
+    sqlSelect = "Select * from meterReadings where consumption < " + str(value)
+    return sqlSelect
 
 def getByCity(city):
     return "SELECT * FROM meterReadings WHERE city = '" + city + "'"
