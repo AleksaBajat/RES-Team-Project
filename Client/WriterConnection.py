@@ -1,5 +1,7 @@
 import json
 import socket
+import sys
+sys.path.append('../')
 from Model.DataSample import *
 
 def getMessage():
@@ -22,8 +24,8 @@ def getMessage():
     }
 
     message = DataSample(ID, potrosnja, korisnik, adresa)
-
-    return json.dumps(message.__dict__).encode('utf-8')
+    
+    return json.dumps(message.__dict__).encode("utf-8")
 
 def connectToWriter():
     # Create a TCP/IP socket
