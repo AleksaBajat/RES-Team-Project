@@ -1,3 +1,4 @@
+import sqlite3
 import sys
 sys.path.append('../')
 
@@ -28,3 +29,11 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         start_new_thread(multi_threaded_connection, (conn,))
 
 
+def connect_to_database(fileName):
+    conn = None
+    try:
+        conn = sqlite3.connect(fileName)
+    except Exception as e:
+        print(e)
+
+    return conn

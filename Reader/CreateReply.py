@@ -22,8 +22,10 @@ def getReply(option,parameter):
 def getAll():
     return "SELECT * FROM meterReadings"
 
-def getByMonth(month):
-    return
+def getByMonth(month, conn):
+    sqlSelect = "Select * from Data where month = " + month
+    return sqlSelect
+
 def getByAddress(address):
     return
 

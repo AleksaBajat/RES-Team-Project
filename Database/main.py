@@ -21,7 +21,6 @@ def create_table(conn, create_table_sql):
         print(e)
 
 
-
 def main():
     database = r"../database.db"
 
