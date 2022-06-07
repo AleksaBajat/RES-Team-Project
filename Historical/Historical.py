@@ -9,6 +9,15 @@ from _thread import *
 ReceiveHost = "127.0.0.1"
 ReceivePort = 30000
 
+def connect_to_database(fileName):
+    conn = None
+    try:
+        conn = sqlite3.connect(fileName)
+    except Exception as e:
+        print(e)
+
+    return conn
+
 def multi_threaded_connection(connection):
     with connection:
         while True:
@@ -17,7 +26,14 @@ def multi_threaded_connection(connection):
                 break
             data = pickle.loads(data)
             for sample in data:
-                print("Received: {} {} {} {}".format(sample.unitId, sample.consumption, sample.address, sample.userId))
+                print("Received: {}".format(sample))
+                db_connection = connect_to_database(r"../database.db");
+                sql = f''' INSERT INTO meterReadings VALUES({sample.unitId},{sample.userId},{sample.consumption},'{sample.address.country}','{sample.address.city}','{sample.address.street}',{sample.address.street_number},'{sample.datetime}')'''
+                cur = db_connection.cursor()
+                cur.execute(sql)
+                db_connection.commit()
+
+
 
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
@@ -27,13 +43,3 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         conn, addr = s.accept()
         print(f"Connected by {addr}")
         start_new_thread(multi_threaded_connection, (conn,))
-
-
-def connect_to_database(fileName):
-    conn = None
-    try:
-        conn = sqlite3.connect(fileName)
-    except Exception as e:
-        print(e)
-
-    return conn

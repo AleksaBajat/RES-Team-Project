@@ -4,6 +4,7 @@ sys.path.append('../')
 import json
 import socket
 from _thread import *
+import pickle
 
 from Model.DataSample import *
 
@@ -14,23 +15,18 @@ SendHost = "127.0.0.1"
 SendPort = 20000
 
 
-def multi_threaded_connection(connection): 
-    receiveData = [] 
+def multi_threaded_connection(connection):
     with connection:
-        while True:
-            data = conn.recv(100)
-            if not data:
-                break
-            receiveData.append(data)                                                      # ako ima vise od 1024 bajta, spaja ih u jedan niz
+        data = conn.recv(1024)
 
-        data = json.loads(b''.join(receiveData))                                                        # spaja niz bajtova u byte list
-        sample = DataSample(**data)
-        print("{} {} {} {}".format(sample.unitId, sample.consumption, sample.address, sample.userId))        # radi provere
+        print(data)
+        sample = pickle.loads(data)
+        print(str(sample))        # radi provere
 
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:                            # slanje ka Dump buffer-u
             try:
                 s.connect((SendHost, SendPort))
-                s.send(json.dumps(sample.__dict__).encode('utf-8'))
+                s.send(pickle.dumps(sample))
             except Exception as e:
                 print(e)
             finally:

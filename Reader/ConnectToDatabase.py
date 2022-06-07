@@ -22,7 +22,6 @@ def select_by_string(conn, string):
 
 
 def open_connection_and_reply(string): 
-    
     conn = create_connection(database)
     with conn:
         rows = select_by_string(conn, string)

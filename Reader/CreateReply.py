@@ -23,20 +23,19 @@ def getAll():
     return "SELECT * FROM meterReadings"
 
 def getByMonth(month, conn):
-    sqlSelect = "Select * from Data where month = " + month
+    sqlSelect = "Select * from meterReadings where month = " + month
     return sqlSelect
 
-def getByAddress(address):
-    return
-
 def getByPowerConsumptionAbove(value):
-    return
+    sqlSelect = "Select * from meterReadings where consumption >= " + str(value)
+    return sqlSelect
 
 def getByPowerConsumptionBelow(value):
-    return
+    sqlSelect = "Select * from meterReadings where consumption < " + str(value)
+    return sqlSelect
 
 def getByCity(city):
-    return
+    return "SELECT * FROM meterReadings WHERE city = '" + city + "'"
 
 def getByClientId(userId):
     return "SELECT * FROM meterReadings WHERE user_id ="+userId
