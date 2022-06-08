@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import overload
 
 class DataSample:
     def __str__(self):
@@ -10,3 +11,6 @@ class DataSample:
         self.userId = userId
         self.address = address
         self.datetime = datetime.now().strftime("%B")
+
+    def __eq__(self, other):
+        return self.unitId == other.unitId and self.userId == other.userId and self.consumption == other.consumption and self.address == other.address and self.datetime == other.datetime

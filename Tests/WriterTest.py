@@ -3,19 +3,40 @@ sys.path.append('../')
 
 import unittest
 from Writer.Writer import *
+from Model.DataSample import *
+from Model.Address import *
+
 
 ReceiveHost = "127.0.0.1" 
 ReceivePort = 10000
 
+
 class TestWriter(unittest.TestCase):    
 
     def test_send(self):
-        self.assertEqual(sendData("hello", ReceiveHost, ReceivePort), "hello")
-        self.assertEqual(sendData("1", ReceiveHost, ReceivePort), "1")
-        self.assertEqual(sendData(" ", ReceiveHost, ReceivePort), " ")
-        self.assertEqual(sendData("", ReceiveHost, ReceivePort), "")
-        self.assertEqual(sendData("kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk", ReceiveHost, ReceivePort), "kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk")
-        self.assertEqual(sendData("]asd2K!@)32", ReceiveHost, ReceivePort), "]asd2K!@)32")
-        self.assertEqual(sendData("jgioja;idj sf;i gdsauh aij39 dgsjg dsaij23 dsgna", ReceiveHost, ReceivePort), "jgioja;idj sf;i gdsauh aij39 dgsjg dsaij23 dsgna")
+        s = DataSample(1, 1000, 1, Address('Serbia', "Novi Sad", 'Bulevar Oslobodjenja', 12))
+        self.assertEqual(sendData(s, ReceiveHost, ReceivePort), s)
+        
+        s = DataSample(1324234, 1000, 1, Address('Serbaaaaaaaaaaaaaaaaaaaia', "Novi Saaaaaaaaaaaaaaaaaaaaaad", 'Bulevaaaaaaaaaaaaaaar Oslobodjenja', 12))
+        self.assertEqual(sendData(s, ReceiveHost, ReceivePort), s)
 
+        s = DataSample(1, 1000, 1, Address(1, 1, 1, 1))
+        self.assertEqual(sendData(s, ReceiveHost, ReceivePort), s)
 
+        s = DataSample(0, 0, 0, Address(1, 1, 1, 1))
+        self.assertEqual(sendData(s, ReceiveHost, ReceivePort), s)
+
+        self.assertEqual(sendData("SUCCES", ReceiveHost, ReceivePort), "SUCCES")
+        self.assertEqual(sendData("ERROR", ReceiveHost, ReceivePort), "ERROR")
+        self.assertEqual(sendData("   ", ReceiveHost, ReceivePort), "   ")
+        
+        s = DataSample(1, 1000, 1, Address('Serbia', "Novi Sad", 'Bulevar Oslobodjenja', 12))
+        s2 = DataSample(1, 1000, 1, Address('Serbia', "Novi S1ad", 'Bulevar Oslobodjenja', 12))
+        self.assertNotEqual(sendData(s, ReceiveHost, ReceivePort), s2)
+
+        s = DataSample(1, 100, 1, Address('Serbia', "Novi Sad", 'Bulevar Oslobodjenja', 12))
+        s2 = DataSample(1, 1000, 1, Address('Serbia', "Novi Sad", 'Bulevar Oslobodjenja', 12))
+        self.assertNotEqual(sendData(s, ReceiveHost, ReceivePort), s2)
+
+    def test_receive(self):
+        pass
