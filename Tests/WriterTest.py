@@ -10,6 +10,12 @@ from Model.Address import *
 ReceiveHost = "127.0.0.1" 
 ReceivePort = 10000
 
+SendHost = "127.0.0.1" 
+SendPort = 20000
+
+ListenerHost = "127.0.0.1"
+ListenerPort = 30000
+
 
 class TestWriter(unittest.TestCase):    
 
@@ -39,4 +45,15 @@ class TestWriter(unittest.TestCase):
         self.assertNotEqual(sendData(s, ReceiveHost, ReceivePort), s2)
 
     def test_receive(self):
-        pass
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            s.connect((SendHost, SendPort))
+            
+            self.assertEqual(receiveData(s), "SUCCESS")
+                
+    # def test_listener(self):
+    #     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+    #         s.bind((ListenerHost, ListenerPort))
+    #         while(True):
+    #             conn, addr = createListener(s)
+    #             start_new_thread(multi_threaded_connection, (conn, ))
+            

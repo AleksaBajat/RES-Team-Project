@@ -24,10 +24,10 @@ def receiveData(connection):
     return sample
 
 
-def sendData(sample):
+def sendData(sample, sendHost, sendPort):
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:                            # sending towards DumpBufer
         try:
-            s.connect((SendHost, SendPort))
+            s.connect((sendHost, sendPort))
             s.send(pickle.dumps(sample))
             value = s.recv(1024)
             value = pickle.loads(value)
@@ -42,7 +42,7 @@ def sendData(sample):
 
 def multi_threaded_connection(connection):
     sample = receiveData(connection)
-    return_message = sendData(sample)
+    return_message = sendData(sample, SendHost, SendPort)
     connection.send(pickle.dumps(return_message))                    # sending return value back
     connection.close()
 
@@ -61,5 +61,6 @@ def startService():
             start_new_thread(multi_threaded_connection, (conn, ))
             
 
-print("Writer started:")
-startService()
+if __name__ == '__main__':
+    print("Writer started:")
+    startService()
