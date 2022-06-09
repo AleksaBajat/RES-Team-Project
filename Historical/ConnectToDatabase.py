@@ -3,7 +3,7 @@ from sqlite3 import Error
  
 database = r"../database.db"
 
-def create_connection(db_file):
+def connect_to_database(db_file):
     conn = None
     try:
         conn = sqlite3.connect(db_file)
@@ -21,8 +21,10 @@ def select_by_string(conn, string):
 
 
 def open_connection_and_reply(string): 
-    conn = create_connection(database)
+    conn = connect_to_database(database)
     with conn:
         rows = select_by_string(conn, string)
-
-        return rows
+        return_string=""
+        for s in rows:
+            return_string += str(s) + "\n"
+        return return_string

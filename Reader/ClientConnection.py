@@ -2,6 +2,7 @@ from optparse import Option
 from sqlite3 import paramstyle
 from CreateQuery import *
 import sys
+import pickle
 
 sys.path.append('../')
 
@@ -20,11 +21,11 @@ HistoricalPort=30000
 def getFromHistorical(string):
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server_address = (HistoricalHost, HistoricalPort)
-    print("connecting to Historical on address" + str(HistoricalHost)+":"+str(HistoricalPort))
+    print("connecting to Historical on address " + str(HistoricalHost)+":"+str(HistoricalPort))
     sock.connect(server_address)
 
     try:
-        sock.send(string.encode("utf-8"))
+        sock.send(pickle.dumps(string.encode("utf-8")))
         reply = sock.recv(1024)
         return reply
 
@@ -47,7 +48,7 @@ def multi_threaded_connection(connection):
             parameter=parameter[1:]
             string=getQuery(option,parameter)
             
-            reply=getFromHistorical()
+            reply=getFromHistorical(string)
 
             conn.sendall(reply)
         
@@ -55,6 +56,7 @@ def multi_threaded_connection(connection):
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     s.bind((ReceiveHost, ReceivePort))
+    print("Reader started")
     while(True):
         s.listen()
         conn, addr = s.accept()
