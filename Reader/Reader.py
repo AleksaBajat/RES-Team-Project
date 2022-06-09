@@ -56,7 +56,7 @@ def multi_threaded_connection(connection):
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     s.bind((ReceiveHost, ReceivePort))
-    print("Reader started")
+    print("Reader started!")
     while(True):
         s.listen()
         conn, addr = s.accept()
