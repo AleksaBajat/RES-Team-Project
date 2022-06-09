@@ -14,7 +14,6 @@ def create_connection(db_file):
 
 def select_by_string(conn, string):
     cur = conn.cursor()
-    print("string za selekciju "+string)
     cur.execute(string)
 
     rows = cur.fetchall()

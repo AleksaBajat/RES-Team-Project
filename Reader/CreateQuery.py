@@ -1,7 +1,6 @@
 from logging import exception
-from ConnectToDatabase import *
 
-def getReply(option,parameter):
+def getQuery(option,parameter):
     string=""
     if(option=="1"):
         string= getAll()
@@ -16,8 +15,7 @@ def getReply(option,parameter):
     elif(option=="6"):
         string = getByPowerConsumptionBelow(parameter)
 
-    reply = open_connection_and_reply(string)
-    return reply
+    return string
 
 def getAll():
     return "SELECT * FROM meterReadings"
