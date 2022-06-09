@@ -6,8 +6,11 @@ import pickle
 import socket
 from _thread import *
 
-ReceiveHost = "127.0.0.1"
-ReceivePort = 30000
+ReceiveHostBuffer = "127.0.0.1"
+ReceivePortBuffer = 30000
+
+ReceiveHostReader = "127.0.0.1"
+ReceivePortReader = 50000
 
 def connect_to_database(fileName):
     conn = None
