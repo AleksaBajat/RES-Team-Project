@@ -7,3 +7,6 @@ class Address:
         self.city = city
         self.street = street
         self.street_number = street_number
+
+    def __eq__(self, other):
+        return self.country == other.country and self.city == other.city and self.street == other.street and self.street_number == other.street_number

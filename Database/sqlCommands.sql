@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS meterReadings (
-    unit_id INTEGER PRIMARY KEY,
+    unit_id INTEGER,
     user_id INTEGER NOT NULL,
     consumption INTEGER NOT NULL,
     country TEXT NOT NULL,

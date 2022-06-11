@@ -13,7 +13,7 @@ def connectToReader(opcija, parametar):
         message = opcija + ", " + parametar
         sock.send(message.encode("utf-8"))
         reply = sock.recv(1024)
-        print(reply)
+        print(reply.decode("utf-8"))
 
     except Exception as e:
         print(e)
