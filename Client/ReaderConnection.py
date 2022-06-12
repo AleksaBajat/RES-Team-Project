@@ -1,22 +1,39 @@
 import socket
+sendHost = "127.0.0.1" 
+sendPort = 40000
 
 
-def connectToReader(opcija, parametar):
-    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+def get_socket():
+    return socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-    # Connect the socket to the port where the server is listening
-    server_address = ('localhost', 40000)
-    print("connecting to " + str(server_address))
-    sock.connect(server_address)
 
+def receive_data(connection):
     try:
-        message = opcija + ", " + parametar
-        sock.send(message.encode("utf-8"))
-        reply = sock.recv(1024)
-        print(reply.decode("utf-8"))
+        data = connection.recv(1024)
+        return data
+    except Exception as e:
+        print(e)
 
+def send_data(message, sendHost, sendPort):
+    s = get_socket()                            # sending towards DumpBufer
+    try:
+        print("connecting to " + str(sendHost+":"+str(sendPort)))
+        s.connect((sendHost, sendPort))
+        s.send(message.encode("utf-8"))
+        value = receive_data(s)
+        
     except Exception as e:
         print(e)
     finally:
-        print('closing socket')
-        sock.close()
+        s.close()
+        return value.decode("utf-8")
+
+def connect_to_reader(option, parameter):
+    try:
+        message = option + ", " + parameter
+        reply = send_data(message,sendHost,sendPort)
+        print(reply)
+
+    except Exception as e:
+        print(e)
+    
