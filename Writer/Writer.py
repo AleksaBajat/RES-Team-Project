@@ -6,7 +6,6 @@ import json
 import socket
 from _thread import *
 import pickle
-
 from Model.DataSample import *
 
 ReceiveHost = "127.0.0.1" 

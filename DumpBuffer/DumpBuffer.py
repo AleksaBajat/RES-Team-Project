@@ -19,43 +19,59 @@ SendHost = "127.0.0.1"
 SendPort = 30000
 
 
+def receive_data(connection):
+    data = connection.recv(1024)
+    sample = pickle.loads(data)
+    print(str(sample))
+    return sample
+
+
+def create_listener(s):
+    s.listen()
+    conn, addr = s.accept()
+    print(f"Connected by {addr}")
+    return (conn, addr)
+
+def get_socket():
+    return socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+
 def multi_threaded_connection(connection):
-    with connection:
-            data = conn.recv(1024)
-
-            sample = pickle.loads(data)
-
-
-            queue.put(sample)
-            print("Received: {}".format(sample))
+    sample = receive_data(connection)
+    queue.put(sample)
+    print("Received: {}".format(sample))
 
 
 def batch_sender(queue):
     while True:
         if queue.qsize() >= QUEUE_SIZE:
-            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
-                try:
-                    sock.connect((SendHost, SendPort))
-                    batch = []
-                    for i in range(QUEUE_SIZE):
-                        #batch.append(json.dumps((queue.get()).__dict__).encode('utf-8'))
-                        batch.append(queue.get())
-                    print(len(batch))
-                    sock.send(pickle.dumps(batch))
-                except Exception as e:
-                    print(e)
-                finally:
-                    sock.close()
+            sock = get_socket()
+            try:
+                sock.connect((SendHost, SendPort))
+                batch = []
+                for i in range(QUEUE_SIZE):
+                    batch.append(queue.get())
+                sock.send(pickle.dumps(batch))
+
+            except Exception as e:
+                print(e)
+
+            finally:
+                sock.close()
         time.sleep(2)
 
 
-with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+if __name__ == '__main__':
+    print("DumpBuffer started:")
+    s = get_socket()
     queue = Queue(0)
     start_new_thread(batch_sender, (queue,))
     s.bind((ReceiveHost, ReceivePort))
-    print("DumpBuffer Started!")
     while True:
-        s.listen()
-        conn, addr = s.accept()
-        print(f"Connected by {addr}")
+        conn, addr = create_listener(s)
         start_new_thread(multi_threaded_connection, (conn,))
+
+
+
+
+

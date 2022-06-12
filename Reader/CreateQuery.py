@@ -1,39 +1,37 @@
-from logging import exception
-
-def getQuery(option,parameter):
+def get_query(option,parameter):
     string=""
     if(option=="1"):
-        string= getAll()
+        string= get_all()
     elif(option=="2"):
-        string =getByMonth(parameter)
+        string =get_by_month(parameter)
     elif(option=="3"):
-        string =getByClientId(parameter)
+        string =get_by_clientId(parameter)
     elif(option=="4"):
-        string=getByCity(parameter)
+        string=get_by_city(parameter)
     elif(option=="5"):
-        string = getByPowerConsumptionAbove(parameter)
+        string = get_by_power_consumption_above(parameter)
     elif(option=="6"):
-        string = getByPowerConsumptionBelow(parameter)
+        string = get_by_power_consumption_below(parameter)
 
     return string
 
-def getAll():
+def get_all():
     return "SELECT * FROM meterReadings"
 
-def getByMonth(month):
+def get_by_month(month):
     sqlSelect = "SELECT * FROM meterReadings WHERE month = '" + month+"'"
     return sqlSelect
 
-def getByPowerConsumptionAbove(value):
+def get_by_power_consumption_above(value):
     sqlSelect = "SELECT * FROM meterReadings WHERE consumption >= " + str(value)
     return sqlSelect
 
-def getByPowerConsumptionBelow(value):
+def get_by_power_consumption_below(value):
     sqlSelect = "SELECT * FROM meterReadings WHERE consumption < " + str(value)
     return sqlSelect
 
-def getByCity(city):
+def get_by_city(city):
     return "SELECT * FROM meterReadings WHERE city = '" + city + "'"
 
-def getByClientId(userId):
-    return "SELECT * FROM meterReadings WHERE user_id ="+userId
+def get_by_clientId(userId):
+    return "SELECT * FROM meterReadings WHERE user_id = "+str(userId)
