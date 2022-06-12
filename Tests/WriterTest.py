@@ -1,6 +1,7 @@
 from csv import writer
 from logging import exception
 import sys
+from venv import create
 sys.path.append('../')
 
 import unittest
@@ -37,7 +38,7 @@ class test_send_data(unittest.TestCase):
         self.assertRaises(Exception, send_data("SUCCESS", ListenerHost, ListenerPort))
 
 
-class test_receive(unittest.TestCase):    
+class test_receive(unittest.TestCase):
 
     def test_receive(self):
         mock_connect = MagicMock(socket.socket)
@@ -46,12 +47,10 @@ class test_receive(unittest.TestCase):
         self.assertEqual("SUCCESS", receive_data(mock_connect))
 
 
+class test_create_listener(unittest.TestCase):
 
-                
-    # def test_listener(self):
-    #     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-    #         s.bind((ListenerHost, ListenerPort))
-    #         while(True):
-    #             conn, addr = createListener(s)
-    #             start_new_thread(multi_threaded_connection, (conn, ))
-            
+    def test_create_listener(self):
+        mock_socket = MagicMock(socket.socket)
+        mock_socket.accept = MagicMock(return_value = (1, 2))
+
+        self.assertEqual((1, 2), create_listener(mock_socket))
