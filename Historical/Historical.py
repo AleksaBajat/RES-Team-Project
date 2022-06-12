@@ -1,49 +1,72 @@
-import sqlite3
 import sys
-import json
-sys.path.append('../')
+sys.path.append("../")
 
 import pickle
 import socket
 from _thread import *
-from ConnectToDatabase import *
+from Historical.ConnectToDatabase import *
 
-ReceiveHostBuffer = "127.0.0.1"
-ReceivePortBuffer = 30000
+IP = "127.0.0.1"
+DUMP_BUFFER_PORT = 30000
+READER_PORT = 60000
+DATABASE_PATH = r"../database.db"
 
-def multi_threaded_connection(connection):
-    with connection:
+def writer_connection(connection):
+    data = receive_data(connection)
+    for sample in data:
+        print("Received: {}".format(sample))
+        send_sample_database(sample)
+
+def create_sql_write_query(sample):
+    return f'''INSERT INTO meterReadings VALUES({sample.unitId},{sample.userId},{sample.consumption},'{sample.address.country}','{sample.address.city}','{sample.address.street}',{sample.address.street_number},'{sample.datetime}')'''
+
+def send_sample_database(sample):
+    try:
+        db_connection = connect_to_database(DATABASE_PATH);
+        sql = create_sql_write_query(sample)
+        cur = db_connection.cursor()
+        cur.execute(sql)
+        db_connection.commit()
+        return "Success"
+    except:
+        print("SQL Query failed execution.")
+        return "Fail"
+
+
+def reader_connection(connection):
+    data = receive_data(connection)
+    data = data.decode("utf-8")
+    reply = open_connection_and_reply(data)
+    if reply == "":
+        connection.sendall("Database is empty".encode("utf-8"))
+    else:
+        connection.sendall(reply.encode("utf-8"))
+
+
+def receive_data(connection):
+    data = connection.recv(1024)
+    sample = pickle.loads(data)
+    print(str(sample))
+    return sample
+
+
+def create_listener(sock):
+    sock.listen()
+    conn, addr = sock.accept()
+    return conn, addr
+
+
+
+def listen(ip,port,worker_function):
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.bind((ip, port))
         while True:
-            data = conn.recv(4096)
-            if not data:
-                break
-            data = pickle.loads(data)
-            if(isinstance(data,bytes)):
-                print("Reader connected")
-                data=data.decode("utf-8")
-                reply= open_connection_and_reply(data)
-                if(reply == ""):
-                    conn.sendall("Database is empty".encode("utf-8"))
-                else:
-                    conn.sendall(reply.encode("utf-8"))
-            else:
-                print("DumpBuffer connected")
-                for sample in data:
-                    print("Received: {}".format(sample))
-                    db_connection = connect_to_database(r"../database.db");
-                    sql = f''' INSERT INTO meterReadings VALUES({sample.unitId},{sample.userId},{sample.consumption},'{sample.address.country}','{sample.address.city}','{sample.address.street}',{sample.address.street_number},'{sample.datetime}')'''
-                    cur = db_connection.cursor()
-                    cur.execute(sql)
-                    db_connection.commit()
+            conn,addr = create_listener(s)
+            start_new_thread(worker_function, (conn,))
 
 
-
-
-with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-    s.bind((ReceiveHostBuffer, ReceivePortBuffer))
+if __name__ == '__main__':
+    start_new_thread(listen, (IP,READER_PORT,reader_connection))
+    start_new_thread(listen, (IP,DUMP_BUFFER_PORT,writer_connection))
     print("Historical started!")
-    while (True):
-        s.listen()
-        conn, addr = s.accept()
-        print(f"Connected by {addr}")
-        start_new_thread(multi_threaded_connection, (conn,))
+    input()
