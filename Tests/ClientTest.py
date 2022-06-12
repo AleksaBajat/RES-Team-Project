@@ -9,6 +9,8 @@ from Model.Address import *
 
 ReceiveHost = "127.0.0.1" 
 ReceivePort = 10000
+SendHost = "127.0.0.1" 
+SendPort = 10000
 
 class TestWriterConnection(unittest.TestCase):
 
@@ -81,8 +83,24 @@ class TestWriterConnection(unittest.TestCase):
        
         self.assertEqual(temp,get_message())
 
+class TestReaderConnection(unittest.TestCase):
+    
 
+    @patch('Client.ReaderConnection.get_socket')
+    def test_receive_data(self,mock_get_socket):
+        mock_socket = MagicMock(socket.socket)
+        mock_socket.recv=MagicMock(return_value="aaa".encode("utf-8"))
+        mock_get_socket=mock_socket
+       
+        self.assertEqual("aaa".encode("utf-8"), receive_data(mock_get_socket))
 
-   
+    @patch('Client.ReaderConnection.get_socket')
+    @patch('Client.ReaderConnection.receive_data')
+    def test_send_data(self,mock_recive_data,mock_get_socket):
+        
+        mock_recive_data.return_value=("aaa".encode("utf-8"))
+       
+        self.assertEqual("aaa", send_data("opcija,parametar", SendHost, SendPort))
+    
 if __name__ == '__main__':
     unittest.main()
