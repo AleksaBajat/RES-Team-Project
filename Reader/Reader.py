@@ -46,7 +46,7 @@ def multi_threaded_connection(connection):
             option=data.split(',')[0]
             parameter=data.split(',')[1]
             parameter=parameter[1:]
-            string=getQuery(option,parameter)
+            string=get_query(option,parameter)
             
             reply=getFromHistorical(string)
 
