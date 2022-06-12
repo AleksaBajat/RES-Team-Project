@@ -1,6 +1,7 @@
 import unittest
 import sys
-from unittest.mock import MagicMock
+import sqlite3
+from unittest.mock import MagicMock, patch, Mock
 
 sys.path.append('../')
 from Historical.Historical import *
@@ -33,6 +34,24 @@ class TestHistorical(unittest.TestCase):
 
         self.assertEqual((1, 2), create_listener(mock_socket))
 
+    @patch('Historical.Historical.open_connection_and_reply', return_value="")
+    @patch('Historical.Historical.receive_data', return_value="some data".encode("utf-8"))
+    def test_reader(self,mock_data,mock_receive):
+        connection = MagicMock(socket.socket)
+        self.assertEqual(False,reader_connection(connection))
+        mock_receive.return_value = "something"
+        self.assertEqual(True,reader_connection(connection))
+
+
+    @patch('Historical.Historical.connect_to_database')
+    def test_send_sample_database(self,mock_data):
+        mock_connection = MagicMock(sqlite3.Connection)
+        mock_cursor = MagicMock(sqlite3.Cursor)
+        mock_connection.cursor.return_value = mock_cursor
+        mock_cursor.execute.return_value = Exception("Fail") ## NE RADI
+
+        mock_data.return_value = mock_connection
+        self.assertEqual("ERROR",send_sample_database(MagicMock()))
 
 if __name__ == '__main__':
     unittest.main()

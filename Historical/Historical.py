@@ -27,10 +27,10 @@ def send_sample_database(sample):
         cur = db_connection.cursor()
         cur.execute(sql)
         db_connection.commit()
-        return "Success"
+        return "SUCCESS"
     except:
         print("SQL Query failed execution.")
-        return "Fail"
+        return "ERROR"
 
 
 def reader_connection(connection):
@@ -38,10 +38,11 @@ def reader_connection(connection):
     data = data.decode("utf-8")
     reply = open_connection_and_reply(data)
     if reply == "":
-        connection.sendall("Database is empty".encode("utf-8"))
+        connection.sendall("Query result is empty".encode("utf-8"))
+        return False
     else:
         connection.sendall(reply.encode("utf-8"))
-
+        return True
 
 def receive_data(connection):
     data = connection.recv(1024)
@@ -55,10 +56,12 @@ def create_listener(sock):
     conn, addr = sock.accept()
     return conn, addr
 
+def get_socket():
+    return socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 
 def listen(ip,port,worker_function):
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s = get_socket()
         s.bind((ip, port))
         while True:
             conn,addr = create_listener(s)
