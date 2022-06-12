@@ -1,7 +1,11 @@
+from csv import writer
+from logging import exception
 import sys
+from venv import create
 sys.path.append('../')
 
 import unittest
+from unittest.mock import MagicMock, patch
 from Writer.Writer import *
 from Model.DataSample import *
 from Model.Address import *
@@ -16,44 +20,45 @@ SendPort = 20000
 ListenerHost = "127.0.0.1"
 ListenerPort = 30000
 
+class test_send_data(unittest.TestCase):
+    @patch('Writer.Writer.get_socket')
+    def test_send(self, mock_get_socket):
+        mock_socket = MagicMock(socket.socket)
+        mock_socket.recv = MagicMock(return_value = pickle.dumps("SUCCESS"))
+        mock_get_socket.return_value = mock_socket
 
-class TestWriter(unittest.TestCase):    
+        self.assertEqual("SUCCESS", send_data("SUCCESS", ListenerHost, ListenerPort))
+    
+    @patch('Writer.Writer.get_socket')
+    def test_send_exception(self, mock_get_socket):
+        mock_socket = MagicMock(socket.socket)
+        mock_socket.recv = MagicMock(return_value = pickle.dumps("SUCCESS"))
+        mock_socket.connect('fsd', 84214)
+        mock_get_socket.return_value = mock_socket
+        self.assertRaises(Exception, send_data("SUCCESS", ListenerHost, ListenerPort))
 
-    def test_send(self):
-        s = DataSample(1, 1000, 1, Address('Serbia', "Novi Sad", 'Bulevar Oslobodjenja', 12))
-        self.assertEqual(sendData(s, ReceiveHost, ReceivePort), s)
-        
-        s = DataSample(1324234, 1000, 1, Address('Serbaaaaaaaaaaaaaaaaaaaia', "Novi Saaaaaaaaaaaaaaaaaaaaaad", 'Bulevaaaaaaaaaaaaaaar Oslobodjenja', 12))
-        self.assertEqual(sendData(s, ReceiveHost, ReceivePort), s)
 
-        s = DataSample(1, 1000, 1, Address(1, 1, 1, 1))
-        self.assertEqual(sendData(s, ReceiveHost, ReceivePort), s)
-
-        s = DataSample(0, 0, 0, Address(1, 1, 1, 1))
-        self.assertEqual(sendData(s, ReceiveHost, ReceivePort), s)
-
-        self.assertEqual(sendData("SUCCES", ReceiveHost, ReceivePort), "SUCCES")
-        self.assertEqual(sendData("ERROR", ReceiveHost, ReceivePort), "ERROR")
-        self.assertEqual(sendData("   ", ReceiveHost, ReceivePort), "   ")
-        
-        s = DataSample(1, 1000, 1, Address('Serbia', "Novi Sad", 'Bulevar Oslobodjenja', 12))
-        s2 = DataSample(1, 1000, 1, Address('Serbia', "Novi S1ad", 'Bulevar Oslobodjenja', 12))
-        self.assertNotEqual(sendData(s, ReceiveHost, ReceivePort), s2)
-
-        s = DataSample(1, 100, 1, Address('Serbia', "Novi Sad", 'Bulevar Oslobodjenja', 12))
-        s2 = DataSample(1, 1000, 1, Address('Serbia', "Novi Sad", 'Bulevar Oslobodjenja', 12))
-        self.assertNotEqual(sendData(s, ReceiveHost, ReceivePort), s2)
+class test_receive(unittest.TestCase):
 
     def test_receive(self):
-        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-            s.connect((SendHost, SendPort))
-            
-            self.assertEqual(receiveData(s), "SUCCESS")
-                
-    # def test_listener(self):
-    #     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-    #         s.bind((ListenerHost, ListenerPort))
-    #         while(True):
-    #             conn, addr = createListener(s)
-    #             start_new_thread(multi_threaded_connection, (conn, ))
-            
+        mock_connect = MagicMock(socket.socket)
+        mock_connect.recv = MagicMock(return_value = pickle.dumps("SUCCESS"))
+        
+        self.assertEqual("SUCCESS", receive_data(mock_connect))
+
+        temp = DataSample(1, 2, 3, Address(1, 2, 3, 4))
+        temp2 = DataSample(12, 2, 3, Address(1, 2, 3, 4))
+        mock_connect.recv = MagicMock(return_value = pickle.dumps(temp))
+
+        self.assertEqual(temp, receive_data(mock_connect))
+        self.assertNotEqual(temp2, receive_data(mock_connect))
+
+
+class test_create_listener(unittest.TestCase):
+
+    def test_create_listener(self):
+        mock_socket = MagicMock(socket.socket)
+        mock_socket.accept = MagicMock(return_value = (1, 2))
+
+        self.assertEqual((1, 2), create_listener(mock_socket))
+
