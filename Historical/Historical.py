@@ -4,7 +4,7 @@ sys.path.append("../")
 import pickle
 import socket
 from _thread import *
-from Historical.ConnectToDatabase import *
+from ConnectToDatabase import *
 
 IP = "127.0.0.1"
 DUMP_BUFFER_PORT = 30000
