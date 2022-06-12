@@ -7,7 +7,7 @@ def menu():
         print("Da li zelite da pisete ili da citate? Unesite slovo w za pisanje ili slovo r za citanje")
         x = input()
         if x == "w":
-            connectToWriter()
+            connect_to_writer()
         elif x == "r":
             print(
                 "Odaberite opciju citanja\n" + 
