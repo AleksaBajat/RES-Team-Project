@@ -4,7 +4,7 @@ import json
 import socket
 sys.path.append('../')
 
-from Reader.CreateQuery import *
+from CreateQuery import *
 from _thread import *
 
 
