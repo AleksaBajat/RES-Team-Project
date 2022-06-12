@@ -6,6 +6,7 @@ from Model.DataSample import *
 from Model.Address import *
 import pickle
 
+
 def getMessage():
     print("Insert meter ID : ")
     meterId =input()
