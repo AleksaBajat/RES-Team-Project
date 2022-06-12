@@ -48,10 +48,14 @@ class TestHistorical(unittest.TestCase):
         mock_connection = MagicMock(sqlite3.Connection)
         mock_cursor = MagicMock(sqlite3.Cursor)
         mock_connection.cursor.return_value = mock_cursor
-        mock_cursor.execute.return_value = Exception("Fail") ## NE RADI
+        mock_cursor.execute.side_effect = Exception("Fail")
 
         mock_data.return_value = mock_connection
         self.assertEqual("ERROR",send_sample_database(MagicMock()))
+        mock_cursor.execute.side_effect = MagicMock()
+        self.assertEqual("SUCCESS",send_sample_database(MagicMock()))
+
+
 
 if __name__ == '__main__':
     unittest.main()
