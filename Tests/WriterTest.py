@@ -46,6 +46,13 @@ class test_receive(unittest.TestCase):
         
         self.assertEqual("SUCCESS", receive_data(mock_connect))
 
+        temp = DataSample(1, 2, 3, Address(1, 2, 3, 4))
+        temp2 = DataSample(12, 2, 3, Address(1, 2, 3, 4))
+        mock_connect.recv = MagicMock(return_value = pickle.dumps(temp))
+
+        self.assertEqual(temp, receive_data(mock_connect))
+        self.assertNotEqual(temp2, receive_data(mock_connect))
+
 
 class test_create_listener(unittest.TestCase):
 
@@ -54,3 +61,4 @@ class test_create_listener(unittest.TestCase):
         mock_socket.accept = MagicMock(return_value = (1, 2))
 
         self.assertEqual((1, 2), create_listener(mock_socket))
+
