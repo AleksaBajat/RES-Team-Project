@@ -12,10 +12,12 @@ ReceiveHost = "127.0.0.1"
 ReceivePort = 40000
 
 HistoricalHost="127.0.0.1"
-HistoricalPort=30000
+HistoricalPort=60000
     
 def get_socket():
     return socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+
 
 def get_from_historical(string):
     sock=get_socket()
