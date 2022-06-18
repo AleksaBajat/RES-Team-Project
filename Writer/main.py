@@ -17,10 +17,13 @@ SendPort = 20000
     
 
 def receive_data(connection):
-    data = connection.recv(1024)
-    sample = pickle.loads(data)
-    print(str(sample))
-    return sample
+    try:
+        data = connection.recv(1024)
+        sample = pickle.loads(data)
+        print(str(sample))
+        return sample
+    except:
+        return 'ERROR'
 
 
 def send_data(sample, sendHost, sendPort):
@@ -28,15 +31,13 @@ def send_data(sample, sendHost, sendPort):
     try:
         s.connect((sendHost, sendPort))
         s.send(pickle.dumps(sample))
-        value = s.recv(1024)
-        value = pickle.loads(value)
-        print(value)
-        
+        message = 'SUCCESS'
     except Exception as e:
         print(e)
+        message = 'ERROR'
     finally:
         s.close()
-        return value
+        return message
 
 def get_socket():
     return socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -55,11 +56,15 @@ def create_listener(s):
     return (conn, addr)
 
 def start_service():
-    s = get_socket()
-    s.bind((ReceiveHost, ReceivePort))
-    while(True):
-        conn, addr = create_listener(s)
-        start_new_thread(multi_threaded_connection, (conn, ))
+    try:
+        s = get_socket()
+        s.bind((ReceiveHost, ReceivePort))
+        while(True):
+            conn, addr = create_listener(s)
+            start_new_thread(multi_threaded_connection, (conn, ))
+    except:
+        print('Writer exception with binding')
+        return 'ERROR'
             
 
 if __name__ == '__main__':
