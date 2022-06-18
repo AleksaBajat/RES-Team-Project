@@ -21,12 +21,12 @@ def send_data(message, sendHost, sendPort):
         s.connect((sendHost, sendPort))
         s.send(message.encode("utf-8"))
         value = receive_data(s)
-        
+        value=value.decode("utf-8")
     except Exception as e:
         print(e)
     finally:
         s.close()
-        return value.decode("utf-8")
+        return value
 
 def connect_to_reader(option, parameter):
     try:
