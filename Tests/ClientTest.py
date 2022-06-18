@@ -79,9 +79,9 @@ class TestWriterConnection(unittest.TestCase):
     @patch('Client.WriterConnection.get_meterId',return_value=123)
     def test_get_message(self, mock_meterId,mock_userId,mock_consumption,mock_country,mock_city,mock_street,mock_streetNumber):   
         temp=DataSample(123,5000,321,Address("Serbia","Novi Sad","Bulevar",15))
-        temp2=get_message()
+        temp2=get_sample()
        
-        self.assertEqual(temp,get_message())
+        self.assertEqual(temp,get_sample())
 
 class TestReaderConnection(unittest.TestCase):
     
