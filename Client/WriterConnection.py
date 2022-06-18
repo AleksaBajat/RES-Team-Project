@@ -111,6 +111,7 @@ def get_message():
 
 
 def connect_to_writer():
+    message = get_message()
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
     try:   
@@ -118,7 +119,6 @@ def connect_to_writer():
         print("connecting to " + str(server_address))
         sock.connect(server_address)
         
-        message = get_message()
         sock.send(pickle.dumps(message))
         
     except Exception as e:
