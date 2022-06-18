@@ -20,10 +20,13 @@ SendPort = 30000
 
 
 def receive_data(connection):
-    data = connection.recv(1024)
-    sample = pickle.loads(data)
-    print(str(sample))
-    return sample
+    try:
+        data = connection.recv(1024)
+        sample = pickle.loads(data)
+        print(str(sample))
+        return sample
+    except Exception as e:
+        print(e)
 
 
 def create_listener(s):
@@ -41,10 +44,8 @@ def multi_threaded_connection(connection):
     queue.put(sample)
     print("Received: {}".format(sample))
 
-
-def batch_sender(queue):
-    while True:
-        if queue.qsize() >= QUEUE_SIZE:
+def get_from_queue(queue):
+    if queue.qsize() >= QUEUE_SIZE:
             sock = get_socket()
             try:
                 sock.connect((SendHost, SendPort))
@@ -52,12 +53,20 @@ def batch_sender(queue):
                 for i in range(QUEUE_SIZE):
                     batch.append(queue.get())
                 sock.send(pickle.dumps(batch))
-
+                
             except Exception as e:
                 print(e)
+                return False
 
             finally:
                 sock.close()
+                return True
+    else:
+        return False
+
+def batch_sender(queue):
+    while True:
+        get_from_queue()
         time.sleep(2)
 
 
