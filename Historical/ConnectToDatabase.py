@@ -7,20 +7,17 @@ def connect_to_database(db_file):
     conn = None
     try:
         conn = sqlite3.connect(db_file)
-    except Exception as e:
+    except Error as e:
         print(e)
-    finally:
-        return conn
+
+    return conn
 
 def select_by_string(conn, string):
-    try:
-        cur = conn.cursor()
-        cur.execute(string)
+    cur = conn.cursor()
+    cur.execute(string)
 
-        rows = cur.fetchall()
-        return rows
-    except:
-        return 'ERROR'
+    rows = cur.fetchall()
+    return rows
 
 
 def open_connection_and_reply(string): 

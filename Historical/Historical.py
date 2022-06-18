@@ -4,7 +4,7 @@ sys.path.append("../")
 import pickle
 import socket
 from _thread import *
-from Historical.ConnectToDatabase import *
+from ConnectToDatabase import *
 
 IP = "127.0.0.1"
 DUMP_BUFFER_PORT = 30000
@@ -13,19 +13,16 @@ DATABASE_PATH = r"../database.db"
 
 def writer_connection(connection):
     data = receive_data(connection)
-    response = 'SUCCESS'
     for sample in data:
         print("Received: {}".format(sample))
-        if send_sample_database(sample) == 'ERROR':
-            response = 'ERROR'
-    return response
+        send_sample_database(sample)
 
 def create_sql_write_query(sample):
     return f'''INSERT INTO meterReadings VALUES({sample.unitId},{sample.userId},{sample.consumption},'{sample.address.country}','{sample.address.city}','{sample.address.street}',{sample.address.street_number},'{sample.datetime}')'''
 
 def send_sample_database(sample):
     try:
-        db_connection = connect_to_database(DATABASE_PATH)
+        db_connection = connect_to_database(DATABASE_PATH);
         sql = create_sql_write_query(sample)
         cur = db_connection.cursor()
         cur.execute(sql)
@@ -48,13 +45,10 @@ def reader_connection(connection):
         return True
 
 def receive_data(connection):
-    try:
-        data = connection.recv(1024)
-        sample = pickle.loads(data)
-        print(str(sample))
-        return sample
-    except:
-        return 'ERROR'
+    data = connection.recv(1024)
+    sample = pickle.loads(data)
+    print(str(sample))
+    return sample
 
 
 def create_listener(sock):
@@ -67,14 +61,11 @@ def get_socket():
 
 
 def listen(ip,port,worker_function):
-    try:
         s = get_socket()
         s.bind((ip, port))
         while True:
             conn,addr = create_listener(s)
             start_new_thread(worker_function, (conn,))
-    except:
-        return 'ERROR'
 
 
 if __name__ == '__main__':
