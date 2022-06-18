@@ -85,11 +85,6 @@ class TestWriterConnection(unittest.TestCase):
 
 class TestReaderConnection(unittest.TestCase):
     
-    def test_get_socket(self):
-       
-        self.assertEqual(socket.socket(socket.AF_INET, socket.SOCK_STREAM),get_socket())
-
-
     @patch('Client.ReaderConnection.get_socket')
     def test_receive_data(self,mock_get_socket):
         mock_socket = MagicMock(socket.socket)
