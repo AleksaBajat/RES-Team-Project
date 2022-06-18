@@ -85,6 +85,10 @@ class TestWriterConnection(unittest.TestCase):
 
 class TestReaderConnection(unittest.TestCase):
     
+    def test_get_socket(self):
+       
+        self.assertEqual(socket.socket(socket.AF_INET, socket.SOCK_STREAM),get_socket())
+
 
     @patch('Client.ReaderConnection.get_socket')
     def test_receive_data(self,mock_get_socket):
@@ -99,8 +103,17 @@ class TestReaderConnection(unittest.TestCase):
     def test_send_data(self,mock_recive_data,mock_get_socket):
         
         mock_recive_data.return_value=("aaa".encode("utf-8"))
-       
         self.assertEqual("aaa", send_data("opcija,parametar", SendHost, SendPort))
+
+        mock_recive_data.return_value=(1)
+        self.assertRaises(Exception, send_data("opcija,parametar", SendHost, SendPort))
     
+        mock_recive_data.return_value=(2.0)
+        self.assertRaises(Exception, send_data("opcija,parametar", SendHost, SendPort))
+    
+        mock_recive_data.return_value=(True)
+        self.assertRaises(Exception, send_data("opcija,parametar", SendHost, SendPort))
+    
+        
 if __name__ == '__main__':
     unittest.main()
