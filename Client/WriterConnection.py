@@ -87,7 +87,7 @@ def get_street_number():
         print("Street number must be an int")
 
 
-def get_message():
+def get_sample():
     print("Insert meter ID : ")
     meterId = get_meterId()
     print("Insert user ID :")
@@ -105,13 +105,13 @@ def get_message():
 
     address = Address(country,city,street,street_number)
 
-    message = DataSample(meterId, consumption, userId, address)
+    sample = DataSample(meterId, consumption, userId, address)
     
-    return message
+    return sample
 
 
 def connect_to_writer():
-    message = get_message()
+    sample = get_sample()
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
     try:   
@@ -119,7 +119,7 @@ def connect_to_writer():
         print("connecting to " + str(server_address))
         sock.connect(server_address)
         
-        sock.send(pickle.dumps(message))
+        sock.send(pickle.dumps(sample))
         
     except Exception as e:
         print(e)
