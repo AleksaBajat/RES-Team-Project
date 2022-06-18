@@ -4,7 +4,7 @@ from unittest import mock
 from unittest.mock import  MagicMock, patch
 sys.path.append('../')
 from Reader.CreateQuery import *
-from Reader.Reader import *
+from Reader.main import *
 import unittest
 
 
