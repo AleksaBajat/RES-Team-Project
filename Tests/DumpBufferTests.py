@@ -1,5 +1,4 @@
 from asyncio import start_server
-from inspect import getframeinfo
 import pickle
 import socket
 import sys
@@ -10,10 +9,7 @@ from unittest.mock import MagicMock, patch
 from Model.Address import Address
 from Model.DataSample import DataSample
 
-from DumpBuffer.main import multi_threaded_connection, receive_data, start_service
-from DumpBuffer.main import create_listener
-from DumpBuffer.main import get_from_queue
-from DumpBuffer.main import Queue
+from DumpBuffer.main import *
 
 
 
@@ -44,7 +40,7 @@ class TestDumpBuffer(unittest.TestCase):
         self.assertEqual((1, 2), create_listener(mock_socket))
 
 
-    @patch('Client.ReaderConnection.socket.socket')
+    @patch('DumpBuffer.main.socket.socket')
     def test_get_from_queue(self, mock_s):
         mock_queue = MagicMock(Queue)
         mock_connect = MagicMock()
@@ -62,13 +58,13 @@ class TestDumpBuffer(unittest.TestCase):
         self.assertRaises(Exception, get_from_queue)
         self.assertEqual('ERROR', get_from_queue(mock_queue))
 
-    @patch('Client.ReaderConnection.socket.socket')
+    @patch('DumpBuffer.main.socket.socket')
     def test_start_service(self, mock_socket):
         mock_socket = None
         self.assertRaises(Exception, start_server)
         self.assertEqual('ERROR', start_service(Queue(0)))
 
-    @patch('Client.ReaderConnection.receive_data')
+    @patch('DumpBuffer.main.receive_data')
     def test_multi_threaded_connection(self, mock_receive):
         mock_receive = None
         self.assertRaises(Exception, multi_threaded_connection)
