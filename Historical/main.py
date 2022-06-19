@@ -32,7 +32,7 @@ def send_sample_database(sample):
         cur.execute(sql)
         db_connection.commit()
         return "SUCCESS"
-    except RuntimeError:
+    except Exception:
         print("SQL Query failed execution.")
         return "ERROR"
 
@@ -54,7 +54,7 @@ def receive_data(connection):
         sample = pickle.loads(data)
         print(str(sample))
         return sample
-    except RuntimeError:
+    except Exception:
         return 'ERROR'
 
 
@@ -74,7 +74,7 @@ def listen(ip,port,worker_function):
         while True:
             conn,addr = create_listener(s)
             start_new_thread(worker_function, (conn,))
-    except RuntimeError:
+    except Exception:
         return 'ERROR'
 
 

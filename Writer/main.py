@@ -19,12 +19,12 @@ def receive_data(connection):
         sample = pickle.loads(data)
         print(str(sample))
         return sample
-    except RuntimeError:
+    except Exception as e:
         return 'ERROR'
 
 
 def send_data(sample, send_host, send_port):
-    s = get_socket()
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     try:
         s.connect((send_host, send_port))
         s.send(pickle.dumps(sample))
@@ -37,15 +37,17 @@ def send_data(sample, send_host, send_port):
     finally:
         s.close()
 
-
-def get_socket():
-    return socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
 def multi_threaded_connection(connection):
-    sample = receive_data(connection)
-    return_message = send_data(sample, SendHost, SendPort)
-    connection.send(pickle.dumps(return_message))                    # sending return value back
-    connection.close()
+    try:
+        sample = receive_data(connection)
+        return_message = send_data(sample, SendHost, SendPort)
+        connection.send(pickle.dumps(return_message))                    # sending return value back
+        connection.close()
+        return 'SUCCESS'
+    except Exception as e:
+        connection.close()
+        return 'ERROR'
+
 
 
 def create_listener(s):
@@ -56,16 +58,17 @@ def create_listener(s):
 
 def start_service():
     try:
-        s = get_socket()
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.bind((ReceiveHost, ReceivePort))
         while True:
             conn, addr = create_listener(s)
             start_new_thread(multi_threaded_connection, (conn, ))
-    except RuntimeError:
+    except Exception as e:
         print('Writer exception with binding')
         return 'ERROR'
             
 
 if __name__ == '__main__':
     print("Writer started:")
-    start_service()
+    start_new_thread(start_service,())
+    input()
