@@ -1,3 +1,4 @@
+from msilib.schema import Error
 import socket
 sendHost = "127.0.0.1" 
 sendPort = 40000
@@ -13,6 +14,8 @@ def receive_data(connection):
         return data
     except Exception as e:
         print(e)
+        return "Error"
+        
 
 def send_data(message, sendHost, sendPort):
     s = get_socket()                            # sending towards DumpBufer
@@ -29,11 +32,9 @@ def send_data(message, sendHost, sendPort):
         return value
 
 def connect_to_reader(option, parameter):
-    try:
-        message = option + ", " + parameter
-        reply = send_data(message,sendHost,sendPort)
-        print(reply)
-
-    except Exception as e:
-        print(e)
+    message = option + ", " + parameter
+    reply = send_data(message,sendHost,sendPort)    
+    print(reply)
+    return message
     
+   
