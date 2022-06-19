@@ -13,14 +13,9 @@ ReceivePort = 40000
 
 HistoricalHost="127.0.0.1"
 HistoricalPort=60000
-    
-def get_socket():
-    return socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-
 
 def get_from_historical(string):
-    sock=get_socket()
+    sock=socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server_address = (HistoricalHost, HistoricalPort)
     print("connecting to Historical on address " + str(HistoricalHost)+":"+str(HistoricalPort))
     sock.connect(server_address)
@@ -29,6 +24,7 @@ def get_from_historical(string):
         sock.send(pickle.dumps(string.encode("utf-8")))
         reply = sock.recv(1024)
         sock.close()
+        print(reply)
         return reply
 
     except Exception as e:
@@ -45,8 +41,8 @@ def get_params(data):
     return option,parameter
 
 def multi_threaded_connection(connection): 
-    with connection:
-        while True:
+    while True:
+        try:
             data = connection.recv(1024)
             if not data:
                 break
@@ -55,17 +51,19 @@ def multi_threaded_connection(connection):
             string=get_query(option,parameter)
             reply=get_from_historical(string)
             connection.sendall(reply)
+        except Exception as e:
+            print(e)
         
       
 def start_reader():
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        s.bind((ReceiveHost, ReceivePort))
-        print("Reader started!")
-        while True:
-            s.listen()
-            conn, addr = s.accept()
-            print(f"Connected by {addr}")
-            start_new_thread(multi_threaded_connection, (conn, ))
+    s=socket.socket(socket.AF_INET, socket.SOCK_STREAM) 
+    s.bind((ReceiveHost, ReceivePort))
+    print("Reader started!")
+    while s:
+        s.listen()
+        conn, addr = s.accept()
+        print(f"Connected by {addr}")
+        start_new_thread(multi_threaded_connection, (conn, ))
 
 if __name__ == '__main__':
     start_reader()
