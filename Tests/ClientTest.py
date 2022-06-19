@@ -2,10 +2,11 @@ import unittest
 import sys
 from unittest.mock import MagicMock, Mock, patch
 sys.path.append('../')
-from Client.ReaderConnection import *
+from Client.ReaderConnection import send_data
+from Client.ReaderConnection import receive_data
 from Client.WriterConnection import *
-from Model.DataSample import *
-from Model.Address import *
+from Model.DataSample import DataSample
+from Model.Address import Address
 
 ReceiveHost = "127.0.0.1" 
 ReceivePort = 10000
@@ -16,11 +17,11 @@ class TestWriterConnection(unittest.TestCase):
 
     @patch('builtins.input', return_value=123)
     def test_getMeterId(self, input):
-        self.assertEqual(get_meterId(), 123)
+        self.assertEqual(get_meter_id(), 123)
 
     @patch('builtins.input', return_value=321)
     def test_getUserId(self, input):
-        self.assertEqual(get_userId(), 321)
+        self.assertEqual(get_user_id(), 321)
     
     @patch('builtins.input', return_value=5000)
     def test_getConsumption(self, input):
@@ -44,11 +45,11 @@ class TestWriterConnection(unittest.TestCase):
 #-----------------------------------------------------Fails
     @patch('builtins.input', return_value='aaa')
     def test_getMeterId2(self, input):
-        self.assertRaises(TypeError,get_meterId())
+        self.assertRaises(TypeError, get_meter_id())
 
     @patch('builtins.input', return_value='1da')
     def test_getUserId2(self, input):
-        self.assertRaises(TypeError,get_userId())
+        self.assertRaises(TypeError, get_user_id())
     
     @patch('builtins.input', return_value='d')
     def test_getConsumption2(self, input):
@@ -77,11 +78,12 @@ class TestWriterConnection(unittest.TestCase):
     @patch('Client.WriterConnection.get_consumption',return_value=5000)
     @patch('Client.WriterConnection.get_userId',return_value=321)
     @patch('Client.WriterConnection.get_meterId',return_value=123)
-    def test_get_message(self, mock_meterId,mock_userId,mock_consumption,mock_country,mock_city,mock_street,mock_streetNumber):   
+    def test_get_message(self, mock_meter_id, mock_user_id, mock_consumption, mock_country, mock_city, mock_street, mock_street_number):
         temp=DataSample(123,5000,321,Address("Serbia","Novi Sad","Bulevar",15))
-        temp2=get_message()
-       
-        self.assertEqual(temp,get_message())
+        self.assertEqual(temp,get_sample())
+
+
+op_par = "opcija,parametar"
 
 class TestReaderConnection(unittest.TestCase):
     
@@ -98,16 +100,16 @@ class TestReaderConnection(unittest.TestCase):
     def test_send_data(self,mock_recive_data,mock_get_socket):
         
         mock_recive_data.return_value=("aaa".encode("utf-8"))
-        self.assertEqual("aaa", send_data("opcija,parametar", SendHost, SendPort))
+        self.assertEqual("aaa", send_data(op_par, SendHost, SendPort))
 
         mock_recive_data.return_value=(1)
-        self.assertRaises(Exception, send_data("opcija,parametar", SendHost, SendPort))
+        self.assertRaises(Exception, send_data(op_par, SendHost, SendPort))
     
         mock_recive_data.return_value=(2.0)
-        self.assertRaises(Exception, send_data("opcija,parametar", SendHost, SendPort))
+        self.assertRaises(Exception, send_data(op_par, SendHost, SendPort))
     
         mock_recive_data.return_value=(True)
-        self.assertRaises(Exception, send_data("opcija,parametar", SendHost, SendPort))
+        self.assertRaises(Exception, send_data(op_par, SendHost, SendPort))
     
         
 if __name__ == '__main__':

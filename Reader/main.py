@@ -1,11 +1,11 @@
-import sys
 import pickle
-import json
 import socket
+import sys
+
 sys.path.append('../')
 
-from CreateQuery import *
-from _thread import *
+from Reader.CreateQuery import get_query
+from _thread import start_new_thread
 
 
 ReceiveHost = "127.0.0.1" 
@@ -28,14 +28,14 @@ def get_from_historical(string):
     try:
         sock.send(pickle.dumps(string.encode("utf-8")))
         reply = sock.recv(1024)
-
-    except Exception as e:
-        print(e)
-        return "ERROR"
-    finally:
-        print('closing socket for Historical')
         sock.close()
         return reply
+
+    except Exception as e:
+        sock.close()
+        print(e)
+        return "ERROR"
+
 
 
 def get_params(data):
@@ -61,7 +61,7 @@ def start_reader():
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.bind((ReceiveHost, ReceivePort))
         print("Reader started!")
-        while(True):
+        while True:
             s.listen()
             conn, addr = s.accept()
             print(f"Connected by {addr}")

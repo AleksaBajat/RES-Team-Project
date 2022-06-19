@@ -1,16 +1,16 @@
 from datetime import datetime
-from typing import overload
+
 
 class DataSample:
     def __str__(self):
-        return "{} {} {} {} {}".format(self.unitId,self.userId,str(self.address),self.consumption, self.datetime)
+        return "{} {} {} {} {}".format(self.unit_id, self.user_id, str(self.address), self.consumption, self.datetime)
 
-    def __init__(self, unitId, consumption, userId, address):
-        self.unitId = unitId
+    def __init__(self, unit_id, consumption, user_id, address):
+        self.unit_id = unit_id
         self.consumption = consumption
-        self.userId = userId
+        self.user_id = user_id
         self.address = address
         self.datetime = datetime.now().strftime("%B")
 
     def __eq__(self, other):
-        return self.unitId == other.unitId and self.userId == other.userId and self.consumption == other.consumption and self.address == other.address and self.datetime == other.datetime
+        return self.unit_id == other.unit_id and self.user_id == other.user_id and self.consumption == other.consumption and self.address == other.address and self.datetime == other.datetime

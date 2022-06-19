@@ -1,11 +1,8 @@
-import json
-from logging import raiseExceptions
 import socket
 import sys
-from typing import Type
 sys.path.append('../')
-from Model.DataSample import *
-from Model.Address import *
+from Model.DataSample import DataSample
+from Model.Address import Address
 import pickle
 
 SendHost = "127.0.0.1"
@@ -15,83 +12,83 @@ SendPort = 10000
 def get_input():
     return input()
 
-def get_meterId():
+def get_meter_id():
     x = get_input()
     try:
-        if(isinstance(x,int)):
+        if x.isnumeric():
             return x
         else:
             raise TypeError
-    except:
+    except TypeError:
         print("MeterId must be an int")
 
-def get_userId():
+def get_user_id():
     x = get_input()
     try:
-        if(isinstance(x,int)):
+        if x.isnumeric():
             return x
         else:
             raise TypeError
-    except:
+    except TypeError:
         print("UserId must be an int")
 
 def get_consumption():
     x = get_input()
     try:
-        if(isinstance(x,int)):
+        if x.isnumeric():
             return x
         else:
             raise TypeError
-    except:
+    except TypeError:
         print("Consumption must be an int")
 
 def get_country():
     x = get_input()
     try:
-        if(x.isalpha() and len(x)<60):
+        if x.isalpha() and len(x)<60:
             return x
         else:
-            raise Exception
-    except Exception:
+            raise RuntimeError
+    except RuntimeError:
         print("Country has only letters. Max length - 60 letters")
 
 def get_city():
     x = get_input()
     try:
-        if(x.isalpha()):
+        if x.isalpha():
             return x
         else:
-            raise Exception
-    except Exception:
+            raise RuntimeError
+    except RuntimeError:
         print("City has only letters.")
     
 
 def get_street():
     x = get_input()
     try:
-        if(x.isalpha()):
+        if x.isalpha():
             return x
         else:
-            raise Exception
-    except Exception:
+            raise RuntimeError
+    except RuntimeError:
         print("Street has only letters.")
 
 def get_street_number():
     x = get_input()
     try:
-        if(isinstance(x,int)):
+        if x.isnumeric():
             return x
         else:
-            raise TypeError
-    except:
+            raise RuntimeError
+    except RuntimeError:
         print("Street number must be an int")
 
 
-def get_message():
+def get_sample():
     print("Insert meter ID : ")
-    meterId = get_meterId()
+    meter_id = get_meter_id()
     print("Insert user ID :")
-    userId = get_userId()
+    user_id = get_user_id()
     print("Insert meter consumption: ")
     consumption = get_consumption()
     print("Insert country: ")
@@ -105,13 +102,13 @@ def get_message():
 
     address = Address(country,city,street,street_number)
 
-    message = DataSample(meterId, consumption, userId, address)
+    sample = DataSample(meter_id, consumption, user_id, address)
     
-    return message
+    return sample
 
 
 def connect_to_writer():
-    message = get_message()
+    sample = get_sample()
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
     try:   
@@ -119,7 +116,7 @@ def connect_to_writer():
         print("connecting to " + str(server_address))
         sock.connect(server_address)
         
-        sock.send(pickle.dumps(message))
+        sock.send(pickle.dumps(sample))
         
     except Exception as e:
         print(e)

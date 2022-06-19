@@ -1,12 +1,11 @@
+import queue
 import sys
 sys.path.append('../')
 
-import json
 import socket
 import time
-from _thread import *
+from _thread import start_new_thread
 
-from Model.DataSample import *
 from queue import Queue
 import pickle
 
@@ -29,57 +28,64 @@ def receive_data(connection):
         print(e)
 
 
-def create_listener(s):
-    s.listen()
-    conn, addr = s.accept()
-    print(f"Connected by {addr}")
-    return (conn, addr)
-
-def get_socket():
-    return socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+def create_listener(sock):
+    sock.listen()
+    connection, address = sock.accept()
+    print(f"Connected by {address}")
+    return connection, address
 
 
 def multi_threaded_connection(connection):
-    sample = receive_data(connection)
-    queue.put(sample)
-    print("Received: {}".format(sample))
+    try:
+        sample = receive_data(connection)
+        queue.put(sample)
+        print("Received: {}".format(sample))
+    except:
+        return 'ERROR'
 
-def get_from_queue(queue):
-    if queue.qsize() >= QUEUE_SIZE:
-            sock = get_socket()
+def get_from_queue(dump_queue):
+    if dump_queue.qsize() >= QUEUE_SIZE:
+            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             try:
                 sock.connect((SendHost, SendPort))
                 batch = []
-                for i in range(QUEUE_SIZE):
-                    batch.append(queue.get())
+                for _ in range(QUEUE_SIZE):
+                    batch.append(dump_queue.get())
                 sock.send(pickle.dumps(batch))
+
+                return True
                 
             except Exception as e:
-                print(e)
-                return False
-
-            finally:
                 sock.close()
-                return True
+                print(e)
+                return 'ERROR'
+
+
     else:
         return False
 
-def batch_sender(queue):
+def batch_sender(dump_queue):
     while True:
-        get_from_queue()
+        get_from_queue(dump_queue)
         time.sleep(2)
+
+def start_service(queue):
+    try:
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        start_new_thread(batch_sender, (queue,))
+        s.bind((ReceiveHost, ReceivePort))
+        while True:
+            conn, addr = create_listener(s)
+            start_new_thread(multi_threaded_connection, (conn,))
+    except Exception as e:
+        return 'ERROR'
 
 
 if __name__ == '__main__':
     print("DumpBuffer started:")
-    s = get_socket()
     queue = Queue(0)
-    start_new_thread(batch_sender, (queue,))
-    s.bind((ReceiveHost, ReceivePort))
-    while True:
-        conn, addr = create_listener(s)
-        start_new_thread(multi_threaded_connection, (conn,))
-
+    start_new_thread(start_service, (queue, ))
+    input()
 
 
 

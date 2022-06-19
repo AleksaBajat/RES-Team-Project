@@ -1,11 +1,14 @@
-from socket import socket
 import sys
-from unittest import mock
-from unittest.mock import  MagicMock, patch
+from socket import socket
+from unittest.mock import MagicMock, patch
+
 sys.path.append('../')
-from Reader.CreateQuery import *
 from Reader.main import *
+
 import unittest
+
+
+
 
 
 class TestCreateQuery(unittest.TestCase):
