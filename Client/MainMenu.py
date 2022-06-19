@@ -5,7 +5,7 @@ from WriterConnection import connect_to_writer
 def menu():
     print("Welcome to the Cache Memory System. Here you can manipulate meter readings.")
     while True:
-        print("Insert (without quotes) 'w' to write or 'r' to read!")
+        print("Insert (without quotes) 'w' to write or 'r' to read 'x' to exit!")
         x = input()
         if x == "w":
             connect_to_writer()
@@ -21,19 +21,19 @@ def menu():
             option = input()
             parameter = '0'
             if option == "2":
-                print("Insert months ordinal number!")
-                print("1 - January")
-                print("2 - February")
-                print("3 - March")
-                print("4 - April")
-                print("5 - May")
-                print("6 - June")
-                print("7 - July")
-                print("8 - August")
-                print("9 - September")
-                print("10 - October")
-                print("11 - November")
-                print("12 - December")
+                print("Insert months name!")
+                print("January")
+                print("February")
+                print("March")
+                print("April")
+                print("May")
+                print("June")
+                print("July")
+                print("August")
+                print("September")
+                print("October")
+                print("November")
+                print("December")
                 parameter = input()
             elif option == "3":
                 print("Insert user id!")
