@@ -15,7 +15,7 @@ def get_input():
 def get_meter_id():
     x = get_input()
     try:
-        if isinstance(x, int):
+        if x.isnumeric():
             return x
         else:
             raise TypeError
@@ -25,7 +25,7 @@ def get_meter_id():
 def get_user_id():
     x = get_input()
     try:
-        if isinstance(x, int):
+        if x.isnumeric():
             return x
         else:
             raise TypeError
@@ -35,7 +35,7 @@ def get_user_id():
 def get_consumption():
     x = get_input()
     try:
-        if isinstance(x, int):
+        if x.isnumeric():
             return x
         else:
             raise TypeError
@@ -76,7 +76,7 @@ def get_street():
 def get_street_number():
     x = get_input()
     try:
-        if isinstance(x, int):
+        if x.isnumeric():
             return x
         else:
             raise RuntimeError

@@ -2,13 +2,11 @@ import pickle
 import socket
 import sys
 import unittest
-
-from Model.DataSample import DataSample
-
 sys.path.append('../')
 
 from unittest.mock import MagicMock, patch
 from Model.Address import Address
+from Model.DataSample import DataSample
 
 from DumpBuffer.main import receive_data
 from DumpBuffer.main import create_listener

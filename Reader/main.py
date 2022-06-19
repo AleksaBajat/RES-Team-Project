@@ -4,7 +4,7 @@ import sys
 
 sys.path.append('../')
 
-from CreateQuery import get_query
+from Reader.CreateQuery import get_query
 from _thread import start_new_thread
 
 
