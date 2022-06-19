@@ -23,7 +23,7 @@ def get_by_month(month):
     return sql_select
 
 def get_by_power_consumption_above(value):
-    sql_select = "SELECT * FROM meterReadings WHERE consumption >= " + str(value)
+    sql_select = "SELECT * FROM meterReadings WHERE consumption > " + str(value)
     return sql_select
 
 def get_by_power_consumption_below(value):

@@ -52,7 +52,6 @@ def receive_data(connection):
     try:
         data = connection.recv(1024)
         sample = pickle.loads(data)
-        print(str(sample))
         return sample
     except Exception:
         return 'ERROR'
@@ -61,6 +60,7 @@ def receive_data(connection):
 def create_listener(sock):
     sock.listen()
     conn, addr = sock.accept()
+    print(f"Connected by {addr}")
     return conn, addr
 
 def get_socket():
@@ -82,4 +82,6 @@ if __name__ == '__main__':
     start_new_thread(listen, (IP,READER_PORT,reader_connection))
     start_new_thread(listen, (IP,DUMP_BUFFER_PORT,writer_connection))
     print("Historical started!")
-    input()
+    x = input()
+    while x != "x":
+        x = input()

@@ -85,7 +85,9 @@ if __name__ == '__main__':
     print("DumpBuffer started:")
     queue = Queue(0)
     start_new_thread(start_service, (queue, ))
-    input()
+    x = input()
+    while x != "x":
+        x = input()
 
 
 

@@ -14,7 +14,7 @@ class TestCreateQuery(unittest.TestCase):
         self.assertEqual(get_query("2","June"), "SELECT * FROM meterReadings WHERE month = 'June'")
         self.assertEqual(get_query("3",123), "SELECT * FROM meterReadings WHERE user_id = 123")
         self.assertEqual(get_query("4","Becej"), "SELECT * FROM meterReadings WHERE city = 'Becej'")
-        self.assertEqual(get_query("5",5000), "SELECT * FROM meterReadings WHERE consumption >= 5000")
+        self.assertEqual(get_query("5",5000), "SELECT * FROM meterReadings WHERE consumption > 5000")
         self.assertEqual(get_query("6",5000), "SELECT * FROM meterReadings WHERE consumption < 5000")
 
 

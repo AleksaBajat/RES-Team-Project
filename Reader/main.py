@@ -17,14 +17,14 @@ HistoricalPort=60000
 def get_from_historical(string):
     sock=socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server_address = (HistoricalHost, HistoricalPort)
-    print("connecting to Historical on address " + str(HistoricalHost)+":"+str(HistoricalPort))
+    print("connecting to Historical on address " + str(HistoricalHost)+":"+str(HistoricalPort)+"\n")
     sock.connect(server_address)
 
     try:
         sock.send(pickle.dumps(string.encode("utf-8")))
         reply = sock.recv(1024)
         sock.close()
-        print(reply)
+        print(reply.decode("utf-8"))
         return reply
 
     except Exception as e:
@@ -66,4 +66,7 @@ def start_reader():
         start_new_thread(multi_threaded_connection, (conn, ))
 
 if __name__ == '__main__':
-    start_reader()
+    start_new_thread(start_reader())
+    x = input()
+    while x != "x":
+        x = input()

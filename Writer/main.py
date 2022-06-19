@@ -71,4 +71,6 @@ def start_service():
 if __name__ == '__main__':
     print("Writer started:")
     start_new_thread(start_service,())
-    input()
+    x = input()
+    while x!="x":
+        x = input()

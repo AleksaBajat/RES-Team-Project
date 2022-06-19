@@ -15,34 +15,22 @@ def menu():
                 "1 - Read All\n" +
                 "2 - Read by Month\n" +
                 "3 - Read by User\n" +
-                "4 - Read by City" +
-                "5 - Read by consumption more than..." +
-                "6 - Read by consumption less than...")
+                "4 - Read by City\n" +
+                "5 - Read by consumption more than...\n" +
+                "6 - Read by consumption less than...\n")
             option = input()
             parameter = '0'
             if option == "2":
-                print("Insert months name!")
-                print("January")
-                print("February")
-                print("March")
-                print("April")
-                print("May")
-                print("June")
-                print("July")
-                print("August")
-                print("September")
-                print("October")
-                print("November")
-                print("December")
-                parameter = input()
+                print("Insert month:")
+                parameter = input().capitalize()
             elif option == "3":
-                print("Insert user id!")
+                print("Insert user id:")
                 parameter = input()
             elif option == "4":
-                print("Insert city!")
+                print("Insert city:")
                 parameter = input()
             elif option == "5" or option == "6":
-                print("Insert consumptions!")
+                print("Insert consumption:")
                 parameter = input()
             connect_to_reader(option, parameter)
         elif x == "x":

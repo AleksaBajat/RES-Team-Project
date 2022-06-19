@@ -20,7 +20,6 @@ def receive_data(connection):
 def send_data(message, send_host, send_port):
     s = get_socket()
     try:
-        print("connecting to " + str(send_host + ":" + str(send_port)))
         s.connect((send_host, send_port))
         s.send(message.encode("utf-8"))
         value = receive_data(s)

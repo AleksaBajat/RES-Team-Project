@@ -47,7 +47,7 @@ def get_consumption():
 def get_country():
     x = get_input()
     try:
-        if x.isalpha() and len(x)<60:
+        if all(i.isalpha() or i.isspace() for i in x) and len(x)<60:
             return x
         else:
             raise RuntimeError
@@ -58,7 +58,7 @@ def get_country():
 def get_city():
     x = get_input()
     try:
-        if x.isalpha():
+        if all(i.isalpha() or i.isspace() for i in x):
             return x
         else:
             raise RuntimeError
@@ -69,13 +69,14 @@ def get_city():
 def get_street():
     x = get_input()
     try:
-        if x.isalpha():
+        if all(i.isalpha() or i.isspace() for i in x):
             return x
         else:
             raise RuntimeError
     except RuntimeError:
         print("Street has only letters.")
-        return "Error"  
+        return "Error"
+
 def get_street_number():
     x = get_input()
     try:
@@ -118,14 +119,12 @@ def connect_to_writer():
     try:   
         sample = get_sample()
         server_address = (SendHost, SendPort)
-        print("connecting to " + str(server_address))
         sock.connect(server_address)  
         sock.send(pickle.dumps(sample))
-        print('closing socket')
+        print("Successfully inserted!")
         sock.close()
     except Exception as e:
         print(e)
-        print('closing socket')
         sock.close()
         
         
