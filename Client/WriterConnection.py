@@ -8,7 +8,6 @@ import pickle
 SendHost = "127.0.0.1"
 SendPort = 10000
 
-
 def get_input():
     return input()
 
@@ -108,18 +107,18 @@ def get_sample():
 
 
 def connect_to_writer():
-    sample = get_sample()
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
     try:   
+        sample = get_sample()
         server_address = (SendHost, SendPort)
         print("connecting to " + str(server_address))
-        sock.connect(server_address)
-        
+        sock.connect(server_address)  
         sock.send(pickle.dumps(sample))
-        
-    except Exception as e:
-        print(e)
-    finally:
         print('closing socket')
         sock.close()
+    except Exception as e:
+        print()
+        print('closing socket')
+        sock.close()
+        
+        
