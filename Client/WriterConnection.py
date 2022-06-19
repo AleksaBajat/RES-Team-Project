@@ -20,6 +20,7 @@ def get_meter_id():
             raise TypeError
     except TypeError:
         print("MeterId must be an int")
+        return "Error"
 
 def get_user_id():
     x = get_input()
@@ -30,6 +31,7 @@ def get_user_id():
             raise TypeError
     except TypeError:
         print("UserId must be an int")
+        return "Error"
 
 def get_consumption():
     x = get_input()
@@ -40,6 +42,7 @@ def get_consumption():
             raise TypeError
     except TypeError:
         print("Consumption must be an int")
+        return "Error"
 
 def get_country():
     x = get_input()
@@ -50,6 +53,7 @@ def get_country():
             raise RuntimeError
     except RuntimeError:
         print("Country has only letters. Max length - 60 letters")
+        return "Error"
 
 def get_city():
     x = get_input()
@@ -60,7 +64,7 @@ def get_city():
             raise RuntimeError
     except RuntimeError:
         print("City has only letters.")
-    
+        return "Error"
 
 def get_street():
     x = get_input()
@@ -71,7 +75,7 @@ def get_street():
             raise RuntimeError
     except RuntimeError:
         print("Street has only letters.")
-
+        return "Error"  
 def get_street_number():
     x = get_input()
     try:
@@ -81,7 +85,7 @@ def get_street_number():
             raise RuntimeError
     except RuntimeError:
         print("Street number must be an int")
-
+        return "Error"
 
 def get_sample():
     print("Insert meter ID : ")
@@ -98,6 +102,9 @@ def get_sample():
     street = get_street()
     print("Insert street number:")
     street_number = get_street_number()
+
+    if(meter_id=="Error" or user_id=="Error" or consumption=="Error" or country=="Error" or city=="Error" or street=="Error" or street_number=="Error"):
+        raise Exception("Values not entered corectly")
 
     address = Address(country,city,street,street_number)
 
@@ -117,7 +124,7 @@ def connect_to_writer():
         print('closing socket')
         sock.close()
     except Exception as e:
-        print()
+        print(e)
         print('closing socket')
         sock.close()
         

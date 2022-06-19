@@ -82,6 +82,9 @@ class TestWriterConnection(unittest.TestCase):
         temp=DataSample('123','5000','321',Address("Serbia","Novi Sad","Bulevar",'15'))
         self.assertEqual(temp,get_sample())
 
+        mock_meter_id.retunr_value="Error"
+        self.assertRaises(Exception,get_sample())
+
     @patch('Client.WriterConnection.socket')
     @patch('Client.WriterConnection.get_sample')
     def test_connect_to_writer(self,mock_get_sample,mock_sock):
