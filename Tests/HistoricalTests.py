@@ -1,10 +1,12 @@
-import unittest
-import sys
 import sqlite3
-from unittest import mock
-from unittest.mock import MagicMock, patch, Mock
+import sys
+import unittest
+from unittest.mock import MagicMock, patch
+
+
 
 sys.path.append('../')
+from Historical.ConnectToDatabase import select_by_string
 from Historical.main import *
 
 from Model.DataSample import DataSample
@@ -32,7 +34,7 @@ class TestHistorical(unittest.TestCase):
         mock_connect.recv = MagicMock(return_value=pickle.dumps(temp))
         self.assertEqual(temp, receive_data(mock_connect))
 
-        mock_connect.recv = MagicMock(return_value = None)
+        mock_connect.recv.side_effect = RuntimeError()
         self.assertEqual('ERROR', receive_data(mock_connect))
 
     def test_create_listener(self):
@@ -59,22 +61,24 @@ class TestHistorical(unittest.TestCase):
         mock_send.return_value = 'SUCCESS'
         self.assertEqual('SUCCESS', writer_connection(mock_socket))
 
+    @patch('Historical.main.create_sql_write_query')
     @patch('Historical.main.connect_to_database')
-    def test_send_sample_database(self,mock_data):
-        mock_connection = MagicMock(sqlite3.Connection)
-        mock_cursor = MagicMock(sqlite3.Cursor)
-        mock_connection.cursor.return_value = mock_cursor
-        mock_cursor.execute.side_effect = Exception("Fail")
+    def test_send_sample_database(self,mock_data, mock_sql):
 
-        mock_data.return_value = mock_connection
-        self.assertEqual("ERROR",send_sample_database(MagicMock()))
-        mock_cursor.execute.side_effect = MagicMock()
-        self.assertEqual("SUCCESS",send_sample_database(MagicMock()))
+        mock_data.return_value = None
+        self.assertRaises(Exception ,send_sample_database)
+        self.assertEqual('ERROR', send_sample_database(MagicMock()))
 
+        mock_data.return_value = MagicMock()
+        self.assertEqual('SUCCESS', send_sample_database(MagicMock()))
+
+
+    @patch('Historical.main.create_listener')
     @patch('Historical.main.get_socket')
-    def test_listen(self, mock_get_socket):
+    def test_listen(self, mock_get_socket, mock_listener):
+        mock_listener.side_effect = RuntimeError()
         mock_socket = MagicMock()
-        mock_socket.bind.execute.side_effect = Exception("Fail")
+        mock_socket.bind.execute.side_effect = RuntimeError("Fail")
         mock_get_socket.return_value = mock_socket
         mock_function = MagicMock()
         self.assertEqual('ERROR', listen('ip',123, mock_function))
@@ -98,7 +102,7 @@ class TestConnectToDataBase(unittest.TestCase):
         mock_conn.cursor.return_value = mock_cursor
         self.assertEqual('result', select_by_string(mock_conn, ''))
 
-        mock_conn.cursor.return_value = None
+        mock_conn.cursor.side_effect = RuntimeError()
         self.assertEqual('ERROR', select_by_string(mock_conn, ''))
 
     @patch('Historical.ConnectToDatabase.connect_to_database')
