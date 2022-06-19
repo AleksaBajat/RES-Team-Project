@@ -1,16 +1,14 @@
 import sqlite3
-from sqlite3 import Error
- 
+
 database = r"../database.db"
 
 def connect_to_database(db_file):
-    conn = None
     try:
         conn = sqlite3.connect(db_file)
+        return conn
     except Exception as e:
         print(e)
-    finally:
-        return conn
+
 
 def select_by_string(conn, string):
     try:
@@ -19,7 +17,7 @@ def select_by_string(conn, string):
 
         rows = cur.fetchall()
         return rows
-    except:
+    except RuntimeError:
         return 'ERROR'
 
 

@@ -1,12 +1,10 @@
 import sys
 sys.path.append('../')
 
-import json
 import socket
 import time
-from _thread import *
+from _thread import start_new_thread
 
-from Model.DataSample import *
 from queue import Queue
 import pickle
 
@@ -29,11 +27,11 @@ def receive_data(connection):
         print(e)
 
 
-def create_listener(s):
-    s.listen()
-    conn, addr = s.accept()
-    print(f"Connected by {addr}")
-    return (conn, addr)
+def create_listener(sock):
+    sock.listen()
+    connection, address = sock.accept()
+    print(f"Connected by {address}")
+    return connection, address
 
 def get_socket():
     return socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -44,29 +42,30 @@ def multi_threaded_connection(connection):
     queue.put(sample)
     print("Received: {}".format(sample))
 
-def get_from_queue(queue):
-    if queue.qsize() >= QUEUE_SIZE:
+def get_from_queue(dump_queue):
+    if dump_queue.qsize() >= QUEUE_SIZE:
             sock = get_socket()
             try:
                 sock.connect((SendHost, SendPort))
                 batch = []
-                for i in range(QUEUE_SIZE):
-                    batch.append(queue.get())
+                for _ in range(QUEUE_SIZE):
+                    batch.append(dump_queue.get())
                 sock.send(pickle.dumps(batch))
+
+                return True
                 
             except Exception as e:
+                sock.close()
                 print(e)
                 return False
 
-            finally:
-                sock.close()
-                return True
+
     else:
         return False
 
-def batch_sender(queue):
+def batch_sender(dump_queue):
     while True:
-        get_from_queue()
+        get_from_queue(dump_queue)
         time.sleep(2)
 
 

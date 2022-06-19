@@ -1,7 +1,5 @@
-from csv import writer
-from logging import exception
 import sys
-from venv import create
+
 sys.path.append('../')
 
 import unittest
@@ -12,7 +10,7 @@ from Model.Address import *
 
 
 
-class test_Writer(unittest.TestCase):
+class TestWriter(unittest.TestCase):
     @patch('Writer.main.get_socket')
     def test_send_data(self, mock_get_socket):
         mock_socket = MagicMock(socket.socket)

@@ -1,8 +1,9 @@
-import unittest
-import sys
 import sqlite3
-from unittest import mock
-from unittest.mock import MagicMock, patch, Mock
+import sys
+import unittest
+from unittest.mock import MagicMock, patch
+
+from Historical.ConnectToDatabase import select_by_string
 
 sys.path.append('../')
 from Historical.main import *

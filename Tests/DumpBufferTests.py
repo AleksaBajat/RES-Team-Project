@@ -1,14 +1,19 @@
+import pickle
+import socket
 import sys
 import unittest
-from unittest import mock
+
+from Model.DataSample import DataSample
 
 sys.path.append('../')
 
 from unittest.mock import MagicMock, patch
-from queue import Queue
 from Model.Address import Address
 
-from DumpBuffer.main import *
+from DumpBuffer.main import receive_data
+from DumpBuffer.main import create_listener
+from DumpBuffer.main import get_from_queue
+from DumpBuffer.main import Queue
 
 
 
@@ -39,21 +44,19 @@ class TestDumpBuffer(unittest.TestCase):
         self.assertEqual((1, 2), create_listener(mock_socket))
 
     @patch('Client.ReaderConnection.get_socket')
-    def test_get_from_queue(self,mock_get_socket):
+    def test_get_from_queue(self):
         mock_queue      = MagicMock(Queue)
         mock_queue.qsize= MagicMock(return_value=7)
         mock_queue.get  = MagicMock(return_value="sample")  
 
         mock_socket= MagicMock(socket.socket)
         mock_socket.send=MagicMock()
-        mock_get_socket=mock_socket
 
         self.assertEqual(True,get_from_queue(mock_queue))
 
         mock_queue.qsize=MagicMock(return_value=1)
         self.assertEqual(False,get_from_queue(mock_queue))
 
-        mock_get_socket=None
         self.assertEqual(False,get_from_queue(mock_queue))
 
 if __name__ == '__main__':

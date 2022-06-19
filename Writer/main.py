@@ -1,12 +1,9 @@
-from random import sample
 import sys
 sys.path.append('../')
 
-import json
 import socket
 from _thread import *
 import pickle
-from Model.DataSample import *
 
 ReceiveHost = "127.0.0.1" 
 ReceivePort = 10000
@@ -22,22 +19,24 @@ def receive_data(connection):
         sample = pickle.loads(data)
         print(str(sample))
         return sample
-    except:
+    except RuntimeError:
         return 'ERROR'
 
 
-def send_data(sample, sendHost, sendPort):
-    s = get_socket()                            # sending towards DumpBufer
+def send_data(sample, send_host, send_port):
+    s = get_socket()
     try:
-        s.connect((sendHost, sendPort))
+        s.connect((send_host, send_port))
         s.send(pickle.dumps(sample))
         message = 'SUCCESS'
+        return message
     except Exception as e:
         print(e)
         message = 'ERROR'
+        return message
     finally:
         s.close()
-        return message
+
 
 def get_socket():
     return socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -53,16 +52,16 @@ def create_listener(s):
     s.listen()
     conn, addr = s.accept()
     print(f"Connected by {addr}")
-    return (conn, addr)
+    return conn, addr
 
 def start_service():
     try:
         s = get_socket()
         s.bind((ReceiveHost, ReceivePort))
-        while(True):
+        while True:
             conn, addr = create_listener(s)
             start_new_thread(multi_threaded_connection, (conn, ))
-    except:
+    except RuntimeError:
         print('Writer exception with binding')
         return 'ERROR'
             

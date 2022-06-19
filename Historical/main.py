@@ -3,8 +3,9 @@ sys.path.append("../")
 
 import pickle
 import socket
-from _thread import *
-from Historical.ConnectToDatabase import *
+from _thread import start_new_thread
+from Historical.ConnectToDatabase import connect_to_database
+from Historical.ConnectToDatabase import open_connection_and_reply
 
 IP = "127.0.0.1"
 DUMP_BUFFER_PORT = 30000
@@ -21,7 +22,7 @@ def writer_connection(connection):
     return response
 
 def create_sql_write_query(sample):
-    return f'''INSERT INTO meterReadings VALUES({sample.unitId},{sample.userId},{sample.consumption},'{sample.address.country}','{sample.address.city}','{sample.address.street}',{sample.address.street_number},'{sample.datetime}')'''
+    return f'''INSERT INTO meterReadings VALUES({sample.unit_id},{sample.user_id},{sample.consumption},'{sample.address.country}','{sample.address.city}','{sample.address.street}',{sample.address.street_number},'{sample.datetime}')'''
 
 def send_sample_database(sample):
     try:
@@ -31,7 +32,7 @@ def send_sample_database(sample):
         cur.execute(sql)
         db_connection.commit()
         return "SUCCESS"
-    except:
+    except RuntimeError:
         print("SQL Query failed execution.")
         return "ERROR"
 
@@ -53,7 +54,7 @@ def receive_data(connection):
         sample = pickle.loads(data)
         print(str(sample))
         return sample
-    except:
+    except RuntimeError:
         return 'ERROR'
 
 
@@ -73,7 +74,7 @@ def listen(ip,port,worker_function):
         while True:
             conn,addr = create_listener(s)
             start_new_thread(worker_function, (conn,))
-    except:
+    except RuntimeError:
         return 'ERROR'
 
 
