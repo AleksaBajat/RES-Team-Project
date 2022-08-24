@@ -1,4 +1,4 @@
-# Development of Electroenergetic Systems - Cache Memory
+# Development of Electric Power Systems - Cache Memory
 
 Project created for a class in the Faculty of Technical Sciences. 
 
